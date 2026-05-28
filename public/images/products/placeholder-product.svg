@@ -1,0 +1,8 @@
+<svg width="1200" height="900" viewBox="0 0 1200 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="1200" height="900" fill="#18181B"/>
+<rect x="120" y="120" width="960" height="660" rx="28" fill="#27272A" stroke="#3F3F46" stroke-width="4"/>
+<circle cx="600" cy="450" r="170" fill="#84CC16" fill-opacity="0.13"/>
+<path d="M530 370H670V530H530V370Z" stroke="#84CC16" stroke-width="10"/>
+<path d="M490 610H710" stroke="#A1A1AA" stroke-width="14" stroke-linecap="round"/>
+<text x="600" y="700" fill="#D4D4D8" font-size="44" text-anchor="middle" font-family="Arial, sans-serif">POWERDEX PRODUCT</text>
+</svg>
