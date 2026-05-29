@@ -1,27 +1,32 @@
 import type { Metadata } from "next";
+import { brandClasses } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "Hakkimizda",
-  description: "Powerdex marka hikayesi ve kurumsal yaklasim.",
+  title: "Hakkımızda",
+  description: "Powerdex profesyonel aydınlatma markası ve kurumsal yaklaşım.",
 };
 
 export default function AboutPage() {
   return (
     <section className="mx-auto w-full max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-      <h1 className="text-4xl font-bold text-white">Hakkimizda</h1>
-      <div className="mt-8 space-y-6 rounded-2xl border border-zinc-800 bg-zinc-900 p-8 leading-relaxed text-zinc-300">
+      <p className={`text-xs font-semibold uppercase tracking-[0.2em] ${brandClasses.accent}`}>
+        Kurumsal
+      </p>
+      <h1 className="mt-3 text-4xl font-bold text-white">Hakkımızda</h1>
+      <div className={`mt-8 space-y-6 ${brandClasses.cardSurface} p-8 leading-relaxed ${brandClasses.textMuted}`}>
         <p>
-          Powerdex, 2008 yilinda kurulan Ugur Ithalat&apos;in sahadaki ticari birikimiyle sekillenen
-          bir markadir. 2017 yilinda marka tescilinin alinmasiyla birlikte e-ticaret altyapisini
-          guclendirerek daha ulasilabilir bir urun deneyimi sunmaya baslamistir.
+          Powerdex, 2008 yılında kurulan Uğur İthalat&apos;ın sahadaki ticari birikimiyle şekillenen bir
+          aydınlatma markasıdır. 2017&apos;de marka tescilinin alınmasıyla birlikte profesyonel ürün
+          portföyü ve e-ticaret altyapısı güçlendirilmiştir.
         </p>
         <p>
-          Outdoor aydinlatma, tasinabilir enerji ve kisisel bakim kategorilerinde odagimiz;
-          dayanikli urun, net teknik bilgi ve guvenilir hizmet standardidir.
+          Odak alanlarımız metal el fenerleri, kafa lambaları ve profesyonel kullanım
+          aydınlatmalarıdır. Ürün geliştirmede dayanıklı gövde, pratik kullanım ve uzun süreli
+          performans önceliklidir.
         </p>
         <p>
-          Her urun serisinde kullanici odakli tasarim, sahada pratik kullanim ve erisilebilir
-          fiyat-performans dengesi oncelegimizdir.
+          Hedefimiz; teknik ihtiyaçları net karşılayan, güvenilir ve kurumsal standartlarda bir
+          alışveriş deneyimi sunmaktır.
         </p>
       </div>
     </section>

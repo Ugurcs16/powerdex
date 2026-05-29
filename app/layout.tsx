@@ -18,11 +18,20 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.powerdex.com.tr"),
   title: {
-    default: "Powerdex | Outdoor Aydinlatma, El Feneri, Kamp Lambasi ve Sarjli Urunler",
+    default: "Powerdex | Metal El Feneri, Kafa Lambası ve Profesyonel Aydınlatma",
     template: "%s | Powerdex",
   },
   description:
-    "Powerdex; el feneri, kafa lambasi, kamp lambasi, solar aydinlatma, pil ve kisisel bakim urunlerinde dayanikli ve pratik cozumler sunar.",
+    "Powerdex; metal el fenerleri, kafa lambaları, kamp aydınlatmaları ve profesyonel kullanım için dayanıklı aydınlatma çözümleri sunar.",
+  keywords: [
+    "metal el feneri",
+    "kafa lambası",
+    "powerdex",
+    "kamp lambası",
+    "profesyonel aydınlatma",
+    "şarjlı el feneri",
+    "outdoor aydınlatma",
+  ],
 };
 
 export default function RootLayout({
@@ -35,7 +44,7 @@ export default function RootLayout({
       lang="tr"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-zinc-950 text-zinc-100">
+      <body className="min-h-full bg-[#0B0D10] text-white">
         <div className="flex min-h-screen flex-col">
           <Header />
           <main className="flex-1">{children}</main>

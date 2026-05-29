@@ -1,38 +1,60 @@
+export type UseCaseIcon =
+  | "car"
+  | "wrench"
+  | "shield"
+  | "hard-hat"
+  | "tent"
+  | "alert";
+
 export type UseCase = {
   title: string;
   slug: string;
   description: string;
+  icon: UseCaseIcon;
+  productTag: string;
 };
 
 export const useCases: UseCase[] = [
   {
-    title: "Kamp & Doga",
-    slug: "kamp-doga",
-    description: "Gece kampinda guvenli ve dengeli gorus icin uzun sureli aydinlatma.",
+    title: "Araç ve Yol Yardımı",
+    slug: "arac-yol-yardimi",
+    description: "Yol kenarı ve araç içi müdahalelerde odaklı, güvenilir aydınlatma.",
+    icon: "car",
+    productTag: "Metal El Feneri",
   },
   {
-    title: "Arac Tamiri",
-    slug: "arac-tamiri",
-    description: "Tamir sirasinda odakli isik ve eller serbest kullanim avantajlari.",
+    title: "Teknik Servis",
+    slug: "teknik-servis",
+    description: "Servis ve bakım alanlarında eller serbest veya elde taşınabilir ışık.",
+    icon: "wrench",
+    productTag: "Kafa Lambası",
   },
   {
-    title: "Guvenlik",
+    title: "Güvenlik",
     slug: "guvenlik",
-    description: "Devriye, kontrol ve saha gorevlerinde yuksek gorunurluk destegi.",
+    description: "Devriye, kontrol ve saha görevlerinde tutarlı görünürlük.",
+    icon: "shield",
+    productTag: "Profesyonel Kullanım",
   },
   {
-    title: "Balikcilik",
-    slug: "balikcilik",
-    description: "Su kenari kullanimina uygun pratik ve tasinabilir cozumler.",
+    title: "Şantiye ve Atölye",
+    slug: "santiye-atolye",
+    description: "Zorlu çalışma ortamlarında dayanıklı gövde ve uzun süreli performans.",
+    icon: "hard-hat",
+    productTag: "Metal El Feneri",
+  },
+  {
+    title: "Kamp ve Outdoor",
+    slug: "kamp-outdoor",
+    description: "Açık alan ve gece aktivitelerinde dengeli ve sürdürülebilir ışık.",
+    icon: "tent",
+    productTag: "Kamp Aydınlatma",
   },
   {
     title: "Acil Durum",
     slug: "acil-durum",
-    description: "Elektrik kesintisi ve beklenmeyen durumlarda hizli aydinlatma gucu.",
-  },
-  {
-    title: "Ev & Atolye",
-    slug: "ev-atolye",
-    description: "Ev ici tamir ve atolye islerinde noktasal, kontrollu isik performansi.",
+    description: "Kesinti ve beklenmeyen senaryolarda hızlı devreye alınabilir çözümler.",
+    icon: "alert",
+    productTag: "Şarjlı / Taşınabilir",
   },
 ];

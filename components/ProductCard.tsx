@@ -2,80 +2,75 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Heart } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import type { Product } from "@/data/products";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { ProductVisualFallback } from "@/components/ProductVisualFallback";
+import { brandClasses } from "@/lib/brand";
 
 type ProductCardProps = {
   product: Product;
-  onQuickView?: (product: Product) => void;
 };
 
-export function ProductCard({ product, onQuickView }: ProductCardProps) {
+export function ProductCard({ product }: ProductCardProps) {
   const [imageFailed, setImageFailed] = useState(false);
 
   return (
     <motion.article
-      whileHover={{ y: -6 }}
-      transition={{ duration: 0.25 }}
-      className="group rounded-2xl border border-zinc-800 bg-zinc-900/90 p-4 shadow-[0_10px_40px_rgba(0,0,0,0.28)] transition-shadow hover:shadow-[0_20px_55px_rgba(132,204,22,0.12)]"
+      whileHover={{ y: -5 }}
+      transition={{ duration: 0.22 }}
+      className={`group ${brandClasses.cardSurface} overflow-hidden transition-shadow hover:shadow-[0_16px_48px_rgba(0,0,0,0.45)]`}
     >
-      <div className="relative h-56 overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950">
-        <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(132,204,22,0.24),transparent_55%)] opacity-80 transition-opacity group-hover:opacity-100" />
+      <div className="relative h-56 overflow-hidden border-b border-[#252A33] bg-[#0B0D10]">
+        <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_50%_18%,rgba(184,255,44,0.14),transparent_58%)] opacity-90 transition group-hover:opacity-100" />
         {!imageFailed ? (
           <Image
             src={product.image}
             alt={product.name}
             fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
             onError={() => setImageFailed(true)}
           />
         ) : (
           <ProductVisualFallback name={product.name} category={product.category} />
         )}
       </div>
-      <div className="mt-4 space-y-3">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <p className="text-xs uppercase tracking-wide text-lime-400">{product.category}</p>
-            <h3 className="text-lg font-semibold leading-snug text-zinc-100">{product.name}</h3>
-          </div>
-          <button
-            type="button"
-            aria-label={`${product.name} favorilere ekle`}
-            className="rounded-lg border border-zinc-700 p-2 text-zinc-300 hover:text-lime-400"
-          >
-            <Heart className="size-4" />
-          </button>
+
+      <div className="space-y-4 p-5">
+        <div>
+          <p className={`text-xs uppercase tracking-wide ${brandClasses.accent}`}>{product.category}</p>
+          <h3 className="mt-1 text-lg font-semibold leading-snug text-white">{product.name}</h3>
         </div>
 
-        <ul className="space-y-1 text-sm text-zinc-400">
+        <ul className="space-y-1.5 border-t border-[#252A33] pt-3 text-sm text-zinc-400">
           {product.features.slice(0, 3).map((feature) => (
-            <li key={feature}>- {feature}</li>
+            <li key={feature} className="flex gap-2">
+              <span className="text-[#B8FF2C]">—</span>
+              <span>{feature}</span>
+            </li>
           ))}
         </ul>
 
-        <div className="flex gap-2">
-          <Link
-            href={`/urun/${product.slug}`}
-            className={buttonVariants({
-              className: "flex-1 bg-lime-400 text-zinc-950 hover:bg-lime-300",
-            })}
-          >
-            Detaylari Gor
-          </Link>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => onQuickView?.(product)}
-            className="border-zinc-700 text-zinc-100 hover:bg-zinc-800"
-          >
-            Quick View
-          </Button>
+        <div className="flex flex-wrap gap-2">
+          {product.usageTags.map((tag) => (
+            <span
+              key={tag}
+              className="rounded-md border border-[#252A33] bg-[#0B0D10] px-2 py-1 text-xs text-zinc-300"
+            >
+              {tag}
+            </span>
+          ))}
         </div>
+
+        <Link
+          href={`/urun/${product.slug}`}
+          className={buttonVariants({
+            className: `w-full ${brandClasses.accentBg} hover:brightness-95`,
+          })}
+        >
+          Detayları Gör
+        </Link>
       </div>
     </motion.article>
   );

@@ -4,6 +4,7 @@ import Script from "next/script";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { products } from "@/data/products";
+import { brandClasses } from "@/lib/brand";
 
 type ProductPageProps = {
   params: Promise<{ slug: string }>;
@@ -18,7 +19,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   const product = products.find((item) => item.slug === slug);
 
   if (!product) {
-    return { title: "Urun Bulunamadi" };
+    return { title: "Ürün Bulunamadı" };
   }
 
   return {
@@ -71,11 +72,21 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         </div>
 
         <div className="space-y-6">
-          <p className="text-xs uppercase tracking-[0.15em] text-lime-400">{product.category}</p>
+          <p className={`text-xs uppercase tracking-[0.15em] ${brandClasses.accent}`}>{product.category}</p>
           <h1 className="text-3xl font-bold text-white sm:text-4xl">{product.name}</h1>
-          <p className="leading-relaxed text-zinc-300">{product.shortDescription}</p>
+          <div className="flex flex-wrap gap-2">
+            {product.usageTags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-md border border-[#252A33] bg-[#151922] px-2 py-1 text-xs text-zinc-300"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+          <p className={`leading-relaxed ${brandClasses.textMuted}`}>{product.shortDescription}</p>
 
-          <div className="grid gap-4 rounded-2xl border border-zinc-800 bg-zinc-900 p-5 sm:grid-cols-2">
+          <div className={`grid gap-4 ${brandClasses.cardSurface} p-5 sm:grid-cols-2`}>
             {Object.entries(product.technicalSpecs).map(([key, value]) => (
               <div key={key}>
                 <p className="text-xs uppercase text-zinc-500">{key}</p>
@@ -85,7 +96,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <button className="rounded-lg bg-lime-400 px-5 py-3 font-semibold text-zinc-950">
+            <button className={`rounded-lg px-5 py-3 font-semibold ${brandClasses.accentBg}`}>
               {product.priceLabel}
             </button>
             <Link
