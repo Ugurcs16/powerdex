@@ -52,12 +52,12 @@ export const featuredCategories: CategoryItem[] = [
     name: "Metal El Fenerleri",
     slug: "metal-el-fenerleri",
     description: "Dayanıklı gövde ve güçlü ışık performansı.",
-    image: "/images/products/pd-7007.jpg",
+    image: "/images/products/metalelfeneri.jpg",
   },
   {
     name: "Kafa Lambaları",
     slug: "kafa-lambalari",
     description: "Eller serbest profesyonel kullanım.",
-    image: "/images/products/pd-1072.jpg",
+    image: "/images/products/kafalambasi.jpg",
   },
 ];

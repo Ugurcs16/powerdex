@@ -19,39 +19,45 @@ export function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b ${brandClasses.border} bg-[#0B0D10]/85 backdrop-blur-xl`}
+      className={`sticky top-0 z-50 border-b ${brandClasses.border} ${brandClasses.surface}/95 backdrop-blur-md`}
     >
       <div className="mx-auto flex h-[4.25rem] w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" className="inline-flex items-center gap-2.5">
-          <span className="flex size-8 items-center justify-center rounded-md border border-[#252A33] bg-[#151922] text-xs font-black text-[#B8FF2C]">
+          <span
+            className={`flex size-8 items-center justify-center rounded border ${brandClasses.border} ${brandClasses.card} text-xs font-bold ${brandClasses.accent}`}
+          >
             P
           </span>
-          <span className="text-base font-bold tracking-[0.22em] text-white sm:text-lg">POWERDEX</span>
+          <span className={`text-base font-semibold tracking-[0.18em] sm:text-lg ${brandClasses.text}`}>
+            POWERDEX
+          </span>
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex">
+        <nav className="hidden items-center gap-0.5 lg:flex">
           {primaryNavigation.map((item) => {
             const active = isActive(pathname, item.slug);
             return (
               <div key={item.title} className="group relative">
                 <Link
                   href={item.slug}
-                  className={`flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition ${
+                  className={`flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium transition ${
                     active
-                      ? "text-[#B8FF2C]"
-                      : "text-zinc-300 hover:bg-[#151922] hover:text-white"
+                      ? `${brandClasses.accent}`
+                      : `${brandClasses.textMuted} hover:text-[#F5F5F5] hover:bg-[#20242A]/60`
                   }`}
                 >
                   {item.title}
-                  {item.items?.length ? <ChevronDown className="size-3.5 opacity-70" /> : null}
+                  {item.items?.length ? <ChevronDown className="size-3.5 opacity-60" /> : null}
                 </Link>
                 {item.items?.length ? (
-                  <div className="invisible absolute left-0 top-full z-50 mt-1 min-w-52 rounded-xl border border-[#252A33] bg-[#151922] p-2 opacity-0 shadow-2xl transition-all group-hover:visible group-hover:opacity-100">
+                  <div
+                    className={`invisible absolute left-0 top-full z-50 mt-1 min-w-52 rounded-lg border ${brandClasses.border} ${brandClasses.card} p-1.5 opacity-0 shadow-lg transition-all group-hover:visible group-hover:opacity-100`}
+                  >
                     {item.items.map((subItem) => (
                       <Link
                         key={subItem.slug}
                         href={`/kategori/${subItem.slug}`}
-                        className="block rounded-lg px-3 py-2 text-sm text-zinc-300 hover:bg-[#0B0D10] hover:text-[#B8FF2C]"
+                        className={`block rounded-md px-3 py-2 text-sm ${brandClasses.textMuted} hover:bg-[#1A1D21] hover:text-[#F5F5F5]`}
                       >
                         {subItem.name}
                       </Link>
@@ -67,7 +73,7 @@ export function Header() {
           <Link
             href="/iletisim"
             className={buttonVariants({
-              className: `${brandClasses.accentBg} ${brandClasses.accentGlow} hover:brightness-95`,
+              className: `${brandClasses.accentBg} font-semibold`,
             })}
           >
             Teklif Al
@@ -78,21 +84,21 @@ export function Header() {
           type="button"
           aria-label={isOpen ? "Menüyü kapat" : "Menüyü aç"}
           onClick={() => setIsOpen((prev) => !prev)}
-          className="rounded-lg border border-[#252A33] bg-[#151922] p-2 text-zinc-100 lg:hidden"
+          className={`rounded-md border ${brandClasses.border} ${brandClasses.card} p-2 ${brandClasses.text} lg:hidden`}
         >
           {isOpen ? <X className="size-5" /> : <Menu className="size-5" />}
         </button>
       </div>
 
       {isOpen ? (
-        <div className={`border-t ${brandClasses.border} bg-[#0B0D10] px-4 py-3 lg:hidden`}>
+        <div className={`border-t ${brandClasses.border} ${brandClasses.bg} px-4 py-3 lg:hidden`}>
           <nav className="space-y-2">
             {primaryNavigation.map((item) => (
-              <div key={item.title} className={`rounded-xl border ${brandClasses.border} bg-[#151922] p-3`}>
+              <div key={item.title} className={`rounded-lg border ${brandClasses.border} ${brandClasses.card} p-3`}>
                 <Link
                   href={item.slug}
                   onClick={() => setIsOpen(false)}
-                  className="block text-sm font-semibold text-white"
+                  className={`block text-sm font-semibold ${brandClasses.text}`}
                 >
                   {item.title}
                 </Link>
@@ -115,7 +121,7 @@ export function Header() {
             <Link
               href="/iletisim"
               onClick={() => setIsOpen(false)}
-              className={`${buttonVariants({ className: `w-full ${brandClasses.accentBg}` })}`}
+              className={buttonVariants({ className: `w-full ${brandClasses.accentBg} font-semibold` })}
             >
               Teklif Al
             </Link>

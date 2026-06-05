@@ -54,21 +54,21 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
       </Script>
       <div className="grid gap-8 lg:grid-cols-2">
         <div className="space-y-4">
-          <div className="relative h-[380px] overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900">
-            <Image src={product.image} alt={product.name} fill className="object-cover" />
+          <div
+            className={`relative aspect-[4/3] overflow-hidden rounded-[20px] border ${brandClasses.border} bg-[#151922] shadow-[0_12px_40px_rgba(0,0,0,0.35)]`}
+          >
+            <Image src={product.image} alt={product.name} fill className="object-contain p-6" sizes="(max-width: 1024px) 100vw, 50vw" />
           </div>
           <div className="grid grid-cols-3 gap-3">
             {[1, 2, 3].map((item) => (
-              <div key={item} className="relative h-24 overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900">
-                <Image src={product.image} alt={`${product.name} galeri ${item}`} fill className="object-cover" />
+              <div
+                key={item}
+                className={`relative aspect-[4/3] overflow-hidden rounded-[20px] border ${brandClasses.border} bg-[#151922]`}
+              >
+                <Image src={product.image} alt={`${product.name} galeri ${item}`} fill className="object-contain p-2" sizes="120px" />
               </div>
             ))}
           </div>
-          {product.video ? (
-            <video controls className="w-full rounded-2xl border border-zinc-800" preload="metadata">
-              <source src={product.video} type="video/mp4" />
-            </video>
-          ) : null}
         </div>
 
         <div className="space-y-6">
@@ -78,7 +78,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             {product.usageTags.map((tag) => (
               <span
                 key={tag}
-                className="rounded-md border border-[#252A33] bg-[#151922] px-2 py-1 text-xs text-zinc-300"
+                className={`rounded-md border ${brandClasses.border} ${brandClasses.surface} px-2 py-1 text-xs ${brandClasses.textMuted}`}
               >
                 {tag}
               </span>
@@ -110,7 +110,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
       </div>
 
       <div className="mt-12 grid gap-6 lg:grid-cols-2">
-        <article className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+        <article className={`${brandClasses.cardSurface} p-6`}>
           <h2 className="text-xl font-semibold text-zinc-100">Kullanim Alanlari</h2>
           <ul className="mt-3 space-y-2 text-sm text-zinc-300">
             {product.usageAreas.map((item) => (
@@ -118,7 +118,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             ))}
           </ul>
         </article>
-        <article className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+        <article className={`${brandClasses.cardSurface} p-6`}>
           <h2 className="text-xl font-semibold text-zinc-100">Kutu Icerigi</h2>
           <ul className="mt-3 space-y-2 text-sm text-zinc-300">
             {product.boxContents.map((item) => (
@@ -126,7 +126,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             ))}
           </ul>
         </article>
-        <article className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+        <article className={`${brandClasses.cardSurface} p-6`}>
           <h2 className="text-xl font-semibold text-zinc-100">Guvenlik / Kullanim Uyarisi</h2>
           <ul className="mt-3 space-y-2 text-sm text-zinc-300">
             {product.warnings.map((item) => (
@@ -134,7 +134,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             ))}
           </ul>
         </article>
-        <article className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+        <article className={`${brandClasses.cardSurface} p-6`}>
           <h2 className="text-xl font-semibold text-zinc-100">SSS</h2>
           <div className="mt-3 space-y-3 text-sm text-zinc-300">
             {product.faq.map((item) => (
@@ -151,9 +151,9 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         <h2 className="text-2xl font-bold text-zinc-100">Benzer Urunler</h2>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {similarProducts.map((item) => (
-            <Link key={item.id} href={`/urun/${item.slug}`} className="rounded-xl border border-zinc-800 bg-zinc-900 p-4">
-              <p className="text-sm text-lime-400">{item.category}</p>
-              <p className="mt-2 font-semibold text-zinc-100">{item.name}</p>
+            <Link key={item.id} href={`/urun/${item.slug}`} className={`${brandClasses.cardSurface} p-4`}>
+              <p className={`text-sm ${brandClasses.accent}`}>{item.category}</p>
+              <p className={`mt-2 font-semibold ${brandClasses.text}`}>{item.name}</p>
             </Link>
           ))}
         </div>

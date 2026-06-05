@@ -126,7 +126,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       </div>
       {categoryProducts.length === 0 ? (
         <div
-          className={`mt-8 rounded-xl border border-dashed ${brandClasses.border} bg-[#151922] p-6 text-sm ${brandClasses.textMuted}`}
+          className={`mt-8 rounded-xl border border-dashed ${brandClasses.border} ${brandClasses.card} p-6 text-sm ${brandClasses.textMuted}`}
         >
           Bu kategoriye ait ürünler yakında eklenecektir.
         </div>

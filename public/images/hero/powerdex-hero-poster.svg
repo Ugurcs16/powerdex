@@ -1,21 +1,21 @@
 <svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="1920" height="1080" fill="#0B0D10"/>
-<rect width="1920" height="1080" fill="url(#grad)" opacity="0.9"/>
+<rect width="1920" height="1080" fill="#111315"/>
+<rect width="1920" height="1080" fill="url(#grad)" opacity="0.95"/>
 <defs>
 <linearGradient id="grad" x1="0" y1="540" x2="1920" y2="540" gradientUnits="userSpaceOnUse">
-<stop stop-color="#0B0D10"/>
-<stop offset="0.45" stop-color="#151922"/>
-<stop offset="1" stop-color="#0B0D10" stop-opacity="0.6"/>
+<stop stop-color="#111315"/>
+<stop offset="0.5" stop-color="#1A1D21"/>
+<stop offset="1" stop-color="#111315"/>
 </linearGradient>
 <radialGradient id="beam" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(480 540) rotate(0) scale(520 320)">
-<stop stop-color="#B8FF2C" stop-opacity="0.35"/>
-<stop offset="1" stop-color="#B8FF2C" stop-opacity="0"/>
+<stop stop-color="#A6C74A" stop-opacity="0.12"/>
+<stop offset="1" stop-color="#A6C74A" stop-opacity="0"/>
 </radialGradient>
 </defs>
 <rect width="1920" height="1080" fill="url(#beam)"/>
-<path d="M420 380 L520 280 L620 380 L580 380 L580 620 L460 620 L460 380 Z" fill="#252A33" stroke="#B8FF2C" stroke-width="3" opacity="0.85"/>
-<ellipse cx="520" cy="300" rx="40" ry="28" fill="#B8FF2C" fill-opacity="0.25"/>
-<path d="M1180 420 Q1280 360 1380 420 L1360 500 Q1280 460 1200 500 Z" fill="#252A33" stroke="#3f4654" stroke-width="2"/>
-<circle cx="1280" cy="400" r="55" fill="#151922" stroke="#B8FF2C" stroke-width="2" opacity="0.7"/>
-<text x="80" y="1000" fill="#A1A1AA" font-family="system-ui,sans-serif" font-size="28" letter-spacing="0.2em">POWERDEX  PROFESYONEL AYDINLATMA</text>
+<path d="M420 380 L520 280 L620 380 L580 380 L580 620 L460 620 L460 380 Z" fill="#20242A" stroke="#2A2E35" stroke-width="3"/>
+<ellipse cx="520" cy="300" rx="40" ry="28" fill="#A6C74A" fill-opacity="0.15"/>
+<path d="M1180 420 Q1280 360 1380 420 L1360 500 Q1280 460 1200 500 Z" fill="#20242A" stroke="#2A2E35" stroke-width="2"/>
+<circle cx="1280" cy="400" r="55" fill="#1A1D21" stroke="#A6C74A" stroke-width="1.5" opacity="0.6"/>
+<text x="80" y="1000" fill="#B0B4BC" font-family="system-ui,sans-serif" font-size="28" letter-spacing="0.2em">POWERDEX — PROFESYONEL AYDINLATMA</text>
 </svg>

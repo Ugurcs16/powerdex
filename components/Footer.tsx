@@ -4,10 +4,10 @@ import { brandClasses } from "@/lib/brand";
 
 export function Footer() {
   return (
-    <footer className={`border-t ${brandClasses.border} bg-[#0B0D10]`}>
+    <footer className={`border-t ${brandClasses.border} ${brandClasses.bg}`}>
       <div className="mx-auto grid w-full max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-5 lg:px-8">
         <div className="lg:col-span-2">
-          <p className="text-lg font-bold tracking-[0.2em] text-white">POWERDEX</p>
+          <p className={`text-lg font-semibold tracking-[0.18em] ${brandClasses.text}`}>POWERDEX</p>
           <p className={`mt-4 max-w-md text-sm leading-relaxed ${brandClasses.textMuted}`}>
             Profesyonel aydınlatma sistemleri: metal el fenerleri, kafa lambaları ve saha odaklı
             aydınlatma çözümleri.
@@ -15,11 +15,11 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-white">Ürünler</h3>
+          <h3 className={`text-sm font-semibold uppercase tracking-wide ${brandClasses.text}`}>Ürünler</h3>
           <ul className={`mt-4 space-y-2 text-sm ${brandClasses.textMuted}`}>
             {footerMainLinks.map((link) => (
               <li key={link.slug}>
-                <Link href={`/kategori/${link.slug}`} className="hover:text-[#B8FF2C]">
+                <Link href={`/kategori/${link.slug}`} className="hover:text-[#F5F5F5]">
                   {link.name}
                 </Link>
               </li>
@@ -28,11 +28,11 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-white">Diğer Ürünler</h3>
+          <h3 className={`text-sm font-semibold uppercase tracking-wide ${brandClasses.text}`}>Diğer Ürünler</h3>
           <ul className={`mt-4 space-y-2 text-sm ${brandClasses.textMuted}`}>
             {footerOtherProducts.map((link) => (
               <li key={link.slug}>
-                <Link href={`/kategori/${link.slug}`} className="hover:text-white">
+                <Link href={`/kategori/${link.slug}`} className="hover:text-[#F5F5F5]">
                   {link.name}
                 </Link>
               </li>
@@ -41,25 +41,25 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-white">Kurumsal</h3>
+          <h3 className={`text-sm font-semibold uppercase tracking-wide ${brandClasses.text}`}>Kurumsal</h3>
           <ul className={`mt-4 space-y-2 text-sm ${brandClasses.textMuted}`}>
             <li>
-              <Link href="/hakkimizda" className="hover:text-white">
+              <Link href="/hakkimizda" className="hover:text-[#F5F5F5]">
                 Hakkımızda
               </Link>
             </li>
             <li>
-              <Link href="/iletisim" className="hover:text-white">
+              <Link href="/iletisim" className="hover:text-[#F5F5F5]">
                 İletişim
               </Link>
             </li>
             <li>
-              <Link href="/blog" className="hover:text-white">
+              <Link href="/blog" className="hover:text-[#F5F5F5]">
                 Blog / Rehber
               </Link>
             </li>
             <li>
-              <Link href="/garanti-iade-kargo" className="hover:text-white">
+              <Link href="/garanti-iade-kargo" className="hover:text-[#F5F5F5]">
                 Garanti & Kargo
               </Link>
             </li>

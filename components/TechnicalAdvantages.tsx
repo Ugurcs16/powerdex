@@ -13,10 +13,10 @@ const advantageItems = [
 export function TechnicalAdvantages() {
   return (
     <section className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-      <p className={`text-xs font-semibold uppercase tracking-[0.2em] ${brandClasses.accent}`}>
+      <p className={`text-xs font-medium uppercase tracking-[0.14em] ${brandClasses.accent}`}>
         Teknik Üstünlükler
       </p>
-      <h2 className="mt-3 text-3xl font-bold text-white sm:text-4xl">
+      <h2 className={`mt-3 text-3xl font-bold sm:text-4xl ${brandClasses.text}`}>
         Profesyonel Kullanımda Fark Yaratan Detaylar
       </h2>
       <p className={`mt-3 max-w-2xl ${brandClasses.textMuted}`}>
@@ -26,7 +26,7 @@ export function TechnicalAdvantages() {
         {advantageItems.map((item) => (
           <article key={item.text} className={brandClasses.cardSurface + " p-5"}>
             <item.icon className={`size-5 ${brandClasses.accent}`} />
-            <p className="mt-3 text-sm text-zinc-300">{item.text}</p>
+            <p className={`mt-3 text-sm ${brandClasses.textMuted}`}>{item.text}</p>
           </article>
         ))}
       </div>
