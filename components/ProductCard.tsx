@@ -45,10 +45,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
         <ul className={`space-y-1.5 border-t ${brandClasses.border} pt-3 text-sm ${brandClasses.textMuted}`}>
           {product.features.slice(0, 3).map((feature) => (
-            <li key={feature} className="flex gap-2">
-              <span className="text-[#2A2E35]">—</span>
-              <span>{feature}</span>
-            </li>
+            <li key={feature}>{feature}</li>
           ))}
         </ul>
 
