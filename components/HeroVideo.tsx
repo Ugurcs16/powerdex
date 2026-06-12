@@ -5,26 +5,78 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { buttonVariants } from "@/components/ui/button";
 import { brandClasses } from "@/lib/brand";
+import { useEffect, useState } from "react";
 
 const METAL_FLASHLIGHT = "/images/products/metalelfeneri.jpg";
 const HEADLAMP = "/images/products/kafalambasi.jpg";
+const HERO_POSTER = "/images/hero/powerdex-hero-poster.jpg";
+const HERO_POSTER_FALLBACK = "/images/hero/powerdex-hero-poster.svg";
+const HERO_VIDEO = "/videos/powerdex-hero.mp4";
+
+const HERO_GRADIENT =
+  "linear-gradient(to right, rgba(0,0,0,0.75), rgba(0,0,0,0.45), rgba(0,0,0,0.2))";
+
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  return isDesktop;
+}
+
+function HeroBackground() {
+  const isDesktop = useIsDesktop();
+  const [posterSrc, setPosterSrc] = useState(HERO_POSTER);
+  const [videoReady, setVideoReady] = useState(false);
+
+  const showPoster = !isDesktop || !videoReady;
+
+  return (
+    <div className="absolute inset-0" aria-hidden>
+      <Image
+        src={posterSrc}
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className={`object-cover transition-opacity duration-700 ${showPoster ? "opacity-100" : "opacity-0"}`}
+        onError={() => {
+          if (posterSrc !== HERO_POSTER_FALLBACK) {
+            setPosterSrc(HERO_POSTER_FALLBACK);
+          }
+        }}
+      />
+
+      {isDesktop ? (
+        <video
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${videoReady ? "opacity-100" : "opacity-0"}`}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          onCanPlay={() => setVideoReady(true)}
+          onLoadedData={() => setVideoReady(true)}
+        >
+          <source src={HERO_VIDEO} type="video/mp4" />
+        </video>
+      ) : null}
+
+      <div className="absolute inset-0" style={{ background: HERO_GRADIENT }} />
+    </div>
+  );
+}
 
 export function HeroVideo() {
   return (
     <section className={`relative isolate min-h-[90vh] overflow-hidden ${brandClasses.bg}`}>
-      {/* Blurred product backdrop */}
-      <div className="absolute inset-0">
-        <Image
-          src={METAL_FLASHLIGHT}
-          alt=""
-          fill
-          priority
-          className="scale-110 object-cover opacity-25 blur-2xl"
-          aria-hidden
-        />
-      </div>
-
-      <div className="absolute inset-0 bg-gradient-to-r from-[#111315]/98 via-[#111315]/88 to-[#111315]/55" />
+      <HeroBackground />
 
       <div className="relative z-10 mx-auto grid min-h-[90vh] w-full max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_1fr] lg:px-8">
         <motion.div
@@ -74,7 +126,6 @@ export function HeroVideo() {
           transition={{ delay: 0.15, duration: 0.6 }}
           className="flex flex-col gap-5"
         >
-          {/* Primary product showcase */}
           <div
             className={`relative overflow-hidden rounded-[20px] border ${brandClasses.border} bg-[#151922] shadow-[0_20px_50px_rgba(0,0,0,0.45),0_0_40px_rgba(166,199,74,0.06)]`}
           >
@@ -83,19 +134,18 @@ export function HeroVideo() {
                 src={METAL_FLASHLIGHT}
                 alt="Powerdex Metal El Feneri"
                 fill
-                priority
+                loading="lazy"
                 className="object-contain p-6"
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
           </div>
 
-          {/* Product highlights */}
           <div className="grid gap-4 sm:grid-cols-2">
             <article className={`rounded-[20px] border ${brandClasses.border} ${brandClasses.card} p-4`}>
               <div className="flex gap-3">
                 <div className="relative size-14 shrink-0 overflow-hidden rounded-xl bg-[#151922]">
-                  <Image src={METAL_FLASHLIGHT} alt="" fill className="object-contain p-1" sizes="56px" />
+                  <Image src={METAL_FLASHLIGHT} alt="" fill loading="lazy" className="object-contain p-1" sizes="56px" />
                 </div>
                 <div>
                   <h3 className={`text-sm font-semibold ${brandClasses.text}`}>Metal El Feneri</h3>
@@ -110,7 +160,7 @@ export function HeroVideo() {
             <article className={`rounded-[20px] border ${brandClasses.border} ${brandClasses.card} p-4`}>
               <div className="flex gap-3">
                 <div className="relative size-14 shrink-0 overflow-hidden rounded-xl bg-[#151922]">
-                  <Image src={HEADLAMP} alt="" fill className="object-contain p-1" sizes="56px" />
+                  <Image src={HEADLAMP} alt="" fill loading="lazy" className="object-contain p-1" sizes="56px" />
                 </div>
                 <div>
                   <h3 className={`text-sm font-semibold ${brandClasses.text}`}>Kafa Lambası</h3>
