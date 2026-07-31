@@ -43,10 +43,11 @@ export function ProductCard({ product }: ProductCardProps) {
           <h3 className={`mt-1 text-lg font-semibold leading-snug ${brandClasses.text}`}>{product.name}</h3>
         </div>
 
-        <ul className={`space-y-1.5 border-t ${brandClasses.border} pt-3 text-sm ${brandClasses.textMuted}`}>
-          {product.features.slice(0, 3).map((feature) => (
-            <li key={feature}>{feature}</li>
-          ))}
+        <ul className={`list-none space-y-1.5 border-t ${brandClasses.border} pt-3 text-sm ${brandClasses.textMuted}`}>
+          {product.features.slice(0, 3).map((feature) => {
+            const cleanFeature = feature.replace(/^[-—–\s]+/, "");
+            return <li key={feature}>{cleanFeature}</li>;
+          })}
         </ul>
 
         <div className="flex flex-wrap gap-2">

@@ -27,7 +27,7 @@ export const blogPosts: BlogPost[] = [
     title: "Lümen nedir, ne kadar lümen yeterlidir?",
     slug: "lumen-nedir-ne-kadar-lumen-yeterlidir",
     excerpt:
-      "Lümen değeri ışık şiddetini ifade eder; ama ideal lümen ihtiyacı kullanım senaryosuna göre değişir.",
+      "Lümen değeri ışık şiddetini ifade eder; ancak ideal lümen ihtiyacı kullanım senaryosuna göre değişir.",
     category: "Teknik Bilgi",
     readTime: "3 dk",
     publishedAt: "2026-05-28",
@@ -38,10 +38,10 @@ export const blogPosts: BlogPost[] = [
     ],
   },
   {
-    title: "Kamp lambası mı kafa lambası mı?",
+    title: "Kamp lambası mı, kafa lambası mı?",
     slug: "kamp-lambasi-mi-kafa-lambasi-mi",
     excerpt:
-      "Kamp lambası alan aydınlatmada, kafa lambası ise hareketli görevlerde öne çıkar.",
+      "Kamp lambası alan aydınlatmasında, kafa lambası ise hareketli görevlerde öne çıkar.",
     category: "Karşılaştırma",
     readTime: "4 dk",
     publishedAt: "2026-05-28",

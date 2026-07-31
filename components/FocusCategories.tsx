@@ -67,15 +67,18 @@ export function FocusCategories() {
               </div>
               <div className="space-y-4 p-6 sm:p-8">
                 <p className={`text-sm leading-relaxed ${brandClasses.textMuted}`}>{card.description}</p>
-                <ul className="grid gap-2 sm:grid-cols-2">
-                  {card.features.map((feature) => (
-                    <li
-                      key={feature}
-                      className={`flex items-center gap-2 text-sm ${brandClasses.textMuted} before:size-1 before:rounded-full before:bg-[#2A2E35]`}
-                    >
-                      {feature}
-                    </li>
-                  ))}
+                <ul className="grid list-none gap-2 sm:grid-cols-2">
+                  {card.features.map((feature) => {
+                    const cleanFeature = feature.replace(/^[-—–\s]+/, "");
+                    return (
+                      <li
+                        key={feature}
+                        className={`flex items-center gap-2 text-sm ${brandClasses.textMuted} before:size-1 before:rounded-full before:bg-[#2A2E35]`}
+                      >
+                        {cleanFeature}
+                      </li>
+                    );
+                  })}
                 </ul>
                 <Link
                   href={`/kategori/${card.slug}`}

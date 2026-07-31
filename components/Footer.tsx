@@ -72,19 +72,15 @@ export function Footer() {
           className={`mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-5 text-xs sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8 ${brandClasses.textMuted}`}
         >
           <p>© {new Date().getFullYear()} Powerdex. Tüm hakları saklıdır.</p>
-          <div className={`flex flex-wrap items-center gap-x-2 gap-y-1 text-xs ${brandClasses.textMuted}`}>
+          <div className="flex flex-wrap items-center gap-3">
             <Link href="#" className="hover:text-[#F5F5F5]">
               KVKK
             </Link>
-            <span aria-hidden className="text-[#2A2E35]">
-              ·
-            </span>
+            <span aria-hidden="true">·</span>
             <Link href="#" className="hover:text-[#F5F5F5]">
               Mesafeli Satış
             </Link>
-            <span aria-hidden className="text-[#2A2E35]">
-              ·
-            </span>
+            <span aria-hidden="true">·</span>
             <Link href="/garanti-iade-kargo" className="hover:text-[#F5F5F5]">
               İade Politikası
             </Link>
