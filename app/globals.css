@@ -97,3 +97,13 @@
     @apply outline-2 outline-offset-2 outline-[#A6C74A];
   }
 }
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}

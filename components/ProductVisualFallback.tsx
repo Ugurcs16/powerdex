@@ -1,22 +1,35 @@
 "use client";
 
-import { BatteryCharging, Flashlight, Headset, LampDesk, Shield, Sun } from "lucide-react";
+import { BatteryCharging, Flashlight, Headset, LampDesk, Scissors, Shield, Sun, Wind } from "lucide-react";
+import type { ProductCategory } from "@/types/product";
 import { brandClasses } from "@/lib/brand";
 
 type ProductVisualFallbackProps = {
   name: string;
-  category: string;
+  category: ProductCategory | string;
   className?: string;
 };
 
 function getCategoryIcon(category: string) {
-  const value = category.toLowerCase();
-  if (value.includes("metal") || value.includes("fener")) return "flashlight";
-  if (value.includes("kafa")) return "headlamp";
-  if (value.includes("solar")) return "sun";
-  if (value.includes("pil") || value.includes("şarj") || value.includes("sarj")) return "battery";
-  if (value.includes("kamp")) return "lamp";
-  return "shield";
+  switch (category) {
+    case "metal-el-fenerleri":
+      return "flashlight";
+    case "kafa-lambalari":
+      return "headlamp";
+    case "kamp-lambalari":
+    case "masa-lambalari":
+      return "lamp";
+    case "solar-aydinlatma":
+      return "sun";
+    case "piller-sarj":
+      return "battery";
+    case "berber-makaslari":
+      return "scissors";
+    case "jet-fan":
+      return "wind";
+    default:
+      return "shield";
+  }
 }
 
 export function ProductVisualFallback({ name, category, className = "" }: ProductVisualFallbackProps) {
@@ -35,6 +48,8 @@ export function ProductVisualFallback({ name, category, className = "" }: Produc
           {iconName === "sun" ? <Sun className={`size-8 ${brandClasses.accent}`} /> : null}
           {iconName === "battery" ? <BatteryCharging className={`size-8 ${brandClasses.accent}`} /> : null}
           {iconName === "lamp" ? <LampDesk className={`size-8 ${brandClasses.accent}`} /> : null}
+          {iconName === "scissors" ? <Scissors className={`size-8 ${brandClasses.accent}`} /> : null}
+          {iconName === "wind" ? <Wind className={`size-8 ${brandClasses.accent}`} /> : null}
           {iconName === "shield" ? <Shield className={`size-8 ${brandClasses.accent}`} /> : null}
         </div>
         <p className={`line-clamp-2 text-sm font-medium ${brandClasses.text}`}>{name}</p>

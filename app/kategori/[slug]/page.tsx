@@ -1,136 +1,115 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ProductCard } from "@/components/ProductCard";
-import { products } from "@/data/products";
+import { ProductLoadMoreGrid } from "@/components/ProductLoadMoreGrid";
+import {
+  allCategories,
+  categoryAliases,
+  categoryDescriptions,
+  categoryLabels,
+  getCategoryLabel,
+  resolveCategorySlug,
+} from "@/data/categories";
+import { getProductsByCategory } from "@/data/products";
+import { resolveProductImageSrc } from "@/lib/product-image.server";
 import { brandClasses } from "@/lib/brand";
 
 type CategoryPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-const categoryInfo: Record<string, { name: string; description: string }> = {
-  "metal-el-fenerleri": {
-    name: "Metal El Fenerleri",
-    description:
-      "Zorlu koşullar, teknik işler ve profesyonel kullanım için dayanıklı metal gövdeli el fenerleri.",
-  },
-  "kafa-lambalari": {
-    name: "Kafa Lambaları",
-    description:
-      "Eller serbest kullanım gerektiren teknik, servis ve outdoor senaryoları için kafa lambaları.",
-  },
-  "kamp-aydinlatma": {
-    name: "Kamp Aydınlatma",
-    description: "Kamp, açık alan ve acil durum kullanımına uygun taşınabilir aydınlatma çözümleri.",
-  },
-  "kamp-lambalari": {
-    name: "Kamp Lambaları",
-    description: "Çadır, masa ve açık alan için uzun süreli kamp aydınlatması.",
-  },
-  "profesyonel-kullanim": {
-    name: "Profesyonel Kullanım",
-    description: "Güvenlik, araç, şantiye ve acil durum için saha odaklı aydınlatma seçimi.",
-  },
-  guvenlik: {
-    name: "Güvenlik",
-    description: "Devriye ve saha kontrolü için güvenilir aydınlatma ürünleri.",
-  },
-  "arac-tamir": {
-    name: "Araç / Tamir",
-    description: "Araç içi ve tamir alanlarında odaklı ışık performansı.",
-  },
-  santiye: {
-    name: "Şantiye",
-    description: "Şantiye ve atölye ortamlarında dayanıklı kullanım için ürünler.",
-  },
-  "kamp-outdoor": {
-    name: "Kamp & Outdoor",
-    description: "Açık alan ve gece aktiviteleri için dengeli aydınlatma.",
-  },
-  "acil-durum": {
-    name: "Acil Durum",
-    description: "Kesinti ve beklenmeyen senaryolar için hazır çözümler.",
-  },
-  "tiras-makineleri": { name: "Tıraş Makineleri", description: "Diğer ürün kategorisi." },
-  "berber-makaslari": { name: "Berber Makasları", description: "Diğer ürün kategorisi." },
-  "fon-makinesi": { name: "Fön Makinesi", description: "Diğer ürün kategorisi." },
-  "sac-duzlestirici": { name: "Saç Düzleştirici", description: "Diğer ürün kategorisi." },
-  "hesap-makinesi": { name: "Hesap Makinesi", description: "Diğer ürün kategorisi." },
-};
-
-function getCategoryProducts(slug: string) {
-  if (slug === "metal-el-fenerleri") {
-    return products.filter((p) => p.categorySlug === "metal-el-fenerleri");
-  }
-  if (slug === "kafa-lambalari") {
-    return products.filter((p) => p.categorySlug === "kafa-lambalari");
-  }
-  if (slug === "kamp-aydinlatma" || slug === "kamp-lambalari") {
-    return products.filter((p) => p.categorySlug === "kamp-aydinlatma");
-  }
-  if (slug === "profesyonel-kullanim") {
-    return products.filter((p) => p.priority !== "other");
-  }
-  if (["guvenlik", "arac-tamir", "santiye", "kamp-outdoor", "acil-durum"].includes(slug)) {
-    return products.filter(
-      (p) =>
-        p.categorySlug === "metal-el-fenerleri" ||
-        p.categorySlug === "kafa-lambalari" ||
-        p.categorySlug === "kamp-aydinlatma",
-    );
-  }
-  return [];
-}
-
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const category = categoryInfo[slug];
+  const category = resolveCategorySlug(slug);
   if (!category) {
     return { title: "Kategori Bulunamadı" };
   }
 
   return {
-    title: `${category.name}`,
-    description: `${category.name} — Powerdex profesyonel aydınlatma ürünleri.`,
+    title: getCategoryLabel(category),
+    description: categoryDescriptions[category],
   };
 }
 
 export async function generateStaticParams() {
-  return Object.keys(categoryInfo).map((slug) => ({ slug }));
+  const slugs = new Set<string>([
+    ...Object.keys(categoryLabels),
+    ...Object.keys(categoryAliases),
+  ]);
+  return Array.from(slugs).map((slug) => ({ slug }));
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { slug } = await params;
-  const category = categoryInfo[slug];
+  const category = resolveCategorySlug(slug);
 
   if (!category) {
     notFound();
   }
 
-  const categoryProducts = getCategoryProducts(slug);
+  const categoryProducts = getProductsByCategory(category);
+  const name = getCategoryLabel(category);
+  const description = categoryDescriptions[category];
+  const imageSrcById = Object.fromEntries(
+    categoryProducts.map((product) => [product.id, resolveProductImageSrc(product)]),
+  );
 
   return (
-    <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      <div className={`${brandClasses.cardSurface} p-8`}>
-        <p className={`text-xs uppercase tracking-[0.2em] ${brandClasses.accent}`}>
-          Profesyonel Aydınlatma
-        </p>
-        <h1 className="mt-2 text-4xl font-bold text-white">{category.name}</h1>
-        <p className={`mt-3 max-w-2xl ${brandClasses.textMuted}`}>{category.description}</p>
+    <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
+      <nav className={`mb-6 text-xs ${brandClasses.textMuted}`}>
+        <Link href="/" className="hover:text-[#F5F5F5]">
+          Ana Sayfa
+        </Link>
+        <span className="mx-2">/</span>
+        <Link href="/urunler" className="hover:text-[#F5F5F5]">
+          Ürünler
+        </Link>
+        <span className="mx-2">/</span>
+        <span className={brandClasses.text}>{name}</span>
+      </nav>
+
+      <div className={`${brandClasses.cardSurface} p-5 sm:p-8`}>
+        <p className={`text-xs uppercase tracking-[0.2em] ${brandClasses.accent}`}>Kategori</p>
+        <h1 className="mt-2 text-3xl font-bold text-white sm:text-4xl">{name}</h1>
+        <p className={`mt-3 max-w-2xl text-sm sm:text-base ${brandClasses.textMuted}`}>{description}</p>
+        <p className={`mt-4 text-sm ${brandClasses.textMuted}`}>{categoryProducts.length} ürün</p>
+        {categoryProducts[0]?.useCases?.length ? (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {Array.from(new Set(categoryProducts.flatMap((item) => item.useCases)))
+              .slice(0, 6)
+              .map((useCase) => (
+                <span
+                  key={useCase}
+                  className={`rounded border ${brandClasses.border} px-2 py-1 text-xs ${brandClasses.textMuted}`}
+                >
+                  {useCase}
+                </span>
+              ))}
+          </div>
+        ) : null}
       </div>
 
-      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {categoryProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+      <ProductLoadMoreGrid
+        products={categoryProducts}
+        imageSrcById={imageSrcById}
+        resetKey={category}
+        emptyMessage="Bu kategoriye ait ürün bulunamadı."
+      />
+
+      <div className="mt-12 flex flex-wrap gap-3">
+        {allCategories
+          .filter((item) => item.slug !== category)
+          .slice(0, 8)
+          .map((item) => (
+            <Link
+              key={String(item.slug)}
+              href={`/kategori/${item.slug}`}
+              className={`rounded-md border ${brandClasses.border} px-3 py-1.5 text-xs ${brandClasses.textMuted} hover:text-[#F5F5F5]`}
+            >
+              {item.name}
+            </Link>
+          ))}
       </div>
-      {categoryProducts.length === 0 ? (
-        <div
-          className={`mt-8 rounded-xl border border-dashed ${brandClasses.border} ${brandClasses.card} p-6 text-sm ${brandClasses.textMuted}`}
-        >
-          Bu kategoriye ait ürünler yakında eklenecektir.
-        </div>
-      ) : null}
     </section>
   );
 }

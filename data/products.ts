@@ -5025,11 +5025,48 @@ export function getProductsByCategory(category: Product["category"]): Product[] 
   return catalogProducts.filter((product) => product.category === category);
 }
 
-export function getHomepageProducts(): Product[] {
-  return catalogProducts.filter((product) => product.featured).slice(0, 9);
+/** Featured slider: 6–8 products, metal fener + kafa lambası (+ kamp) öncelikli. */
+export function getHomepageProducts(limit = 8): Product[] {
+  const preferredOrder = ["metal-el-fenerleri", "kafa-lambalari", "kamp-lambalari"] as const;
+  const featured = catalogProducts.filter((product) => product.featured);
+  const byCategory = (category: Product["category"]) =>
+    featured.filter((product) => product.category === category);
+
+  const picks: Product[] = [];
+  const seen = new Set<string>();
+  const push = (product: Product) => {
+    if (seen.has(product.id) || picks.length >= limit) return;
+    seen.add(product.id);
+    picks.push(product);
+  };
+
+  const metal = byCategory("metal-el-fenerleri");
+  const head = byCategory("kafa-lambalari");
+  const camp = byCategory("kamp-lambalari");
+
+  metal.slice(0, 4).forEach(push);
+  head.slice(0, 3).forEach(push);
+  camp.slice(0, 1).forEach(push);
+
+  for (const category of preferredOrder) {
+    for (const product of byCategory(category)) push(product);
+  }
+  for (const product of featured) push(product);
+
+  if (picks.length < 6) {
+    for (const category of preferredOrder) {
+      for (const product of catalogProducts.filter((item) => item.category === category)) {
+        push(product);
+        if (picks.length >= 6) break;
+      }
+      if (picks.length >= 6) break;
+    }
+  }
+
+  return picks.slice(0, Math.min(limit, Math.max(picks.length, 0)));
 }
 
-export function getSimilarProducts(product: Product, limit = 3): Product[] {
+export function getSimilarProducts(product: Product, limit = 4): Product[] {
   return catalogProducts
     .filter((item) => item.category === product.category && item.id !== product.id)
     .slice(0, limit);

@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { ProductCard } from "@/components/ProductCard";
+import { ProductLoadMoreGrid } from "@/components/ProductLoadMoreGrid";
 import { categoryLabels, getCategoryLabel } from "@/data/categories";
 import { catalogProducts } from "@/data/products";
 import type { Product, ProductCategory } from "@/types/product";
@@ -70,12 +70,14 @@ export default function ProductsClient() {
     return sortProducts(list, sort);
   }, [query, category, sort]);
 
+  const resetKey = `${category}|${sort}|${query}`;
+
   return (
-    <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      <div className={`${brandClasses.cardSurface} p-8`}>
+    <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
+      <div className={`${brandClasses.cardSurface} p-5 sm:p-8`}>
         <p className={`text-xs uppercase tracking-[0.2em] ${brandClasses.accent}`}>Katalog</p>
-        <h1 className="mt-2 text-4xl font-bold text-white">Tüm Ürünler</h1>
-        <p className={`mt-3 max-w-2xl ${brandClasses.textMuted}`}>
+        <h1 className="mt-2 text-3xl font-bold text-white sm:text-4xl">Tüm Ürünler</h1>
+        <p className={`mt-3 max-w-2xl text-sm sm:text-base ${brandClasses.textMuted}`}>
           Powerdex ürün kataloğu. Gerçek ürün görselleri SKU ile eşleştirilmiştir.
         </p>
       </div>
@@ -90,7 +92,9 @@ export default function ProductsClient() {
         </button>
       </div>
 
-      <div className={`mt-4 grid gap-4 lg:mt-8 lg:grid-cols-[1.4fr_1fr_1fr] ${filtersOpen ? "" : "hidden lg:grid"}`}>
+      <div
+        className={`mt-4 grid gap-4 lg:mt-8 lg:grid-cols-[1.4fr_1fr_1fr] ${filtersOpen ? "" : "hidden lg:grid"}`}
+      >
         <label className="space-y-2 text-sm">
           <span className={brandClasses.textMuted}>Ürün adı veya SKU ara</span>
           <input
@@ -131,19 +135,11 @@ export default function ProductsClient() {
 
       <p className={`mt-4 text-sm ${brandClasses.textMuted}`}>{filtered.length} ürün listeleniyor</p>
 
-      {filtered.length > 0 ? (
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((product) => (
-            <ProductCard key={product.id} product={product} imageSrc={product.image} />
-          ))}
-        </div>
-      ) : (
-        <div
-          className={`mt-8 rounded-xl border border-dashed ${brandClasses.border} ${brandClasses.card} p-8 text-center text-sm ${brandClasses.textMuted}`}
-        >
-          Aramanızla eşleşen ürün bulunamadı. Filtreleri temizleyip tekrar deneyin.
-        </div>
-      )}
+      <ProductLoadMoreGrid
+        products={filtered}
+        resetKey={resetKey}
+        emptyMessage="Aramanızla eşleşen ürün bulunamadı. Filtreleri temizleyip tekrar deneyin."
+      />
     </section>
   );
 }

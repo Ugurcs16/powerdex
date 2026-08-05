@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, X, ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { Menu, X, ChevronDown, MessageCircleMore } from "lucide-react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
 import { primaryNavigation } from "@/data/categories";
+import { getGeneralWhatsAppMessage, getWhatsAppUrl } from "@/lib/site";
 import { brandClasses } from "@/lib/brand";
 
 function isActive(pathname: string, slug: string) {
@@ -14,21 +15,35 @@ function isActive(pathname: string, slug: string) {
 }
 
 export function Header() {
-  const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const [openForPath, setOpenForPath] = useState<string | null>(null);
+  const isOpen = openForPath === pathname;
+  const whatsappHref = getWhatsAppUrl(getGeneralWhatsAppMessage());
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [isOpen]);
+
+  const closeMenu = () => setOpenForPath(null);
+  const toggleMenu = () => setOpenForPath((prev) => (prev === pathname ? null : pathname));
 
   return (
     <header
       className={`sticky top-0 z-50 border-b ${brandClasses.border} ${brandClasses.surface}/95 backdrop-blur-md`}
     >
-      <div className="mx-auto flex h-[4.25rem] w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="inline-flex items-center gap-2.5">
+      <div className="mx-auto flex h-[4.25rem] w-full max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+        <Link href="/" className="inline-flex min-w-0 items-center gap-2.5" onClick={closeMenu}>
           <span
-            className={`flex size-8 items-center justify-center rounded border ${brandClasses.border} ${brandClasses.card} text-xs font-bold ${brandClasses.accent}`}
+            className={`flex size-8 shrink-0 items-center justify-center rounded border ${brandClasses.border} ${brandClasses.card} text-xs font-bold ${brandClasses.accent}`}
           >
             P
           </span>
-          <span className={`text-base font-semibold tracking-[0.18em] sm:text-lg ${brandClasses.text}`}>
+          <span className={`truncate text-base font-semibold tracking-[0.18em] sm:text-lg ${brandClasses.text}`}>
             POWERDEX
           </span>
         </Link>
@@ -43,7 +58,7 @@ export function Header() {
                   className={`flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium transition ${
                     active
                       ? `${brandClasses.accent}`
-                      : `${brandClasses.textMuted} hover:text-[#F5F5F5] hover:bg-[#20242A]/60`
+                      : `${brandClasses.textMuted} hover:bg-[#20242A]/60 hover:text-[#F5F5F5]`
                   }`}
                 >
                   {item.title}
@@ -80,24 +95,40 @@ export function Header() {
           </Link>
         </div>
 
-        <button
-          type="button"
-          aria-label={isOpen ? "Menüyü kapat" : "Menüyü aç"}
-          onClick={() => setIsOpen((prev) => !prev)}
-          className={`rounded-md border ${brandClasses.border} ${brandClasses.card} p-2 ${brandClasses.text} lg:hidden`}
-        >
-          {isOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-        </button>
+        <div className="flex items-center gap-2 lg:hidden">
+          <Link
+            href={whatsappHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="WhatsApp teklif"
+            className={`inline-flex size-10 items-center justify-center rounded-md border ${brandClasses.border} ${brandClasses.card} ${brandClasses.text}`}
+          >
+            <MessageCircleMore className="size-5" />
+          </Link>
+          <button
+            type="button"
+            aria-expanded={isOpen}
+            aria-controls="mobile-nav"
+            aria-label={isOpen ? "Menüyü kapat" : "Menüyü aç"}
+            onClick={toggleMenu}
+            className={`rounded-md border ${brandClasses.border} ${brandClasses.card} p-2 ${brandClasses.text}`}
+          >
+            {isOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
+        </div>
       </div>
 
       {isOpen ? (
-        <div className={`border-t ${brandClasses.border} ${brandClasses.bg} px-4 py-3 lg:hidden`}>
-          <nav className="space-y-2">
+        <div
+          id="mobile-nav"
+          className={`max-h-[min(80svh,calc(100dvh-4.25rem))] overflow-y-auto border-t ${brandClasses.border} ${brandClasses.bg} px-4 py-3 lg:hidden`}
+        >
+          <nav className="space-y-2 pb-[env(safe-area-inset-bottom)]">
             {primaryNavigation.map((item) => (
               <div key={item.title} className={`rounded-lg border ${brandClasses.border} ${brandClasses.card} p-3`}>
                 <Link
                   href={item.slug}
-                  onClick={() => setIsOpen(false)}
+                  onClick={closeMenu}
                   className={`block text-sm font-semibold ${brandClasses.text}`}
                 >
                   {item.title}
@@ -108,7 +139,7 @@ export function Header() {
                       <Link
                         key={subItem.slug}
                         href={`/kategori/${subItem.slug}`}
-                        onClick={() => setIsOpen(false)}
+                        onClick={closeMenu}
                         className={`block text-sm ${brandClasses.textMuted}`}
                       >
                         {subItem.name}
@@ -120,7 +151,7 @@ export function Header() {
             ))}
             <Link
               href="/iletisim"
-              onClick={() => setIsOpen(false)}
+              onClick={closeMenu}
               className={buttonVariants({ className: `w-full ${brandClasses.accentBg} font-semibold` })}
             >
               Teklif Al

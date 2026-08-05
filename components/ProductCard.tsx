@@ -1,75 +1,126 @@
-"use client";
-
-import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { useState } from "react";
-import type { Product } from "@/data/products";
+import { MessageCircleMore } from "lucide-react";
+import type { Product } from "@/types/product";
+import { getCategoryLabel } from "@/data/categories";
+import { getCategoryPlaceholder } from "@/lib/product-image";
+import { getProductWhatsAppMessage, getWhatsAppUrl } from "@/lib/site";
 import { buttonVariants } from "@/components/ui/button";
-import { ProductVisualFallback } from "@/components/ProductVisualFallback";
+import { ProductImage } from "@/components/ProductImage";
 import { brandClasses } from "@/lib/brand";
 
 type ProductCardProps = {
   product: Product;
+  /** Server-resolved image when available. */
+  imageSrc?: string;
+  priority?: boolean;
 };
 
-export function ProductCard({ product }: ProductCardProps) {
-  const [imageFailed, setImageFailed] = useState(false);
+export function ProductCard({ product, imageSrc, priority = false }: ProductCardProps) {
+  const categoryLabel = getCategoryLabel(product.category);
+  const src =
+    imageSrc ??
+    (product.image?.startsWith("/images/products/")
+      ? product.image
+      : getCategoryPlaceholder(product.category));
+  const whatsappHref = getWhatsAppUrl(getProductWhatsAppMessage(product));
+  const mobileHighlights = product.highlights.slice(0, 2);
+  const desktopHighlights = product.highlights.slice(0, 3);
 
   return (
-    <motion.article
-      whileHover={{ y: -4 }}
-      transition={{ duration: 0.22 }}
-      className={`group overflow-hidden rounded-[20px] border ${brandClasses.border} bg-[#20242A] shadow-[0_8px_30px_rgba(0,0,0,0.3)] transition-shadow hover:shadow-[0_16px_40px_rgba(0,0,0,0.4),0_0_24px_rgba(166,199,74,0.06)]`}
+    <article
+      className={`group flex h-full flex-col overflow-hidden rounded-2xl border ${brandClasses.border} bg-[#20242A] shadow-[0_8px_30px_rgba(0,0,0,0.3)] transition-shadow hover:shadow-[0_16px_40px_rgba(0,0,0,0.4)] md:rounded-[20px]`}
     >
-      <div className={`relative aspect-[4/3] overflow-hidden border-b ${brandClasses.border} bg-[#151922]`}>
-        {!imageFailed ? (
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            className="object-contain p-4 transition-transform duration-300 group-hover:scale-[1.03]"
-            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-            onError={() => setImageFailed(true)}
-          />
-        ) : (
-          <ProductVisualFallback name={product.name} category={product.category} />
-        )}
+      <div
+        className={`relative aspect-square overflow-hidden border-b ${brandClasses.border} bg-[#151922] sm:aspect-[4/5] md:aspect-[4/3]`}
+      >
+        <ProductImage
+          src={src}
+          alt={product.name}
+          category={product.category}
+          priority={priority}
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          className="object-contain p-2.5 transition-transform duration-300 group-hover:scale-[1.03] sm:p-3 md:p-5"
+        />
       </div>
 
-      <div className="space-y-4 p-5">
+      <div className="flex flex-1 flex-col p-2.5 sm:p-3 md:p-5">
         <div>
-          <p className={`text-xs uppercase tracking-wide ${brandClasses.accent}`}>{product.category}</p>
-          <h3 className={`mt-1 text-lg font-semibold leading-snug ${brandClasses.text}`}>{product.name}</h3>
+          <p className={`text-[10px] uppercase tracking-wide ${brandClasses.accent} md:text-xs`}>
+            {categoryLabel}
+          </p>
+          <h3
+            className={`mt-1 line-clamp-2 text-sm font-medium leading-snug ${brandClasses.text} md:text-lg md:font-semibold`}
+          >
+            {product.name}
+          </h3>
+          {product.sku ? (
+            <p className={`mt-1 text-[11px] ${brandClasses.textMuted} md:text-xs`}>SKU: {product.sku}</p>
+          ) : null}
         </div>
 
-        <ul className={`list-none space-y-1.5 border-t ${brandClasses.border} pt-3 text-sm ${brandClasses.textMuted}`}>
-          {product.features.slice(0, 3).map((feature) => {
+        <ul
+          className={`mt-2 hidden list-none space-y-1 border-t ${brandClasses.border} pt-2 text-xs ${brandClasses.textMuted} md:mt-3 md:block md:space-y-1.5 md:pt-3 md:text-sm`}
+        >
+          {desktopHighlights.map((feature) => {
             const cleanFeature = feature.replace(/^[-—–\s]+/, "");
-            return <li key={feature}>{cleanFeature}</li>;
+            return (
+              <li key={feature} className="line-clamp-1">
+                {cleanFeature}
+              </li>
+            );
           })}
         </ul>
 
-        <div className="flex flex-wrap gap-2">
-          {product.usageTags.map((tag) => (
-            <span
-              key={tag}
-              className={`rounded border ${brandClasses.border} ${brandClasses.surface} px-2 py-1 text-xs ${brandClasses.textMuted}`}
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        <Link
-          href={`/urun/${product.slug}`}
-          className={buttonVariants({
-            className: `w-full ${brandClasses.accentBg} font-semibold`,
-          })}
+        <ul
+          className={`mt-2 list-none space-y-0.5 border-t ${brandClasses.border} pt-2 text-xs ${brandClasses.textMuted} md:hidden`}
         >
-          Detayları Gör
-        </Link>
+          {mobileHighlights.map((feature) => {
+            const cleanFeature = feature.replace(/^[-—–\s]+/, "");
+            return (
+              <li key={feature} className="line-clamp-1">
+                {cleanFeature}
+              </li>
+            );
+          })}
+        </ul>
+
+        <div className="mt-auto flex gap-1.5 pt-3 md:gap-2 md:pt-4">
+          <Link
+            href={`/urun/${product.slug}`}
+            className={buttonVariants({
+              size: "sm",
+              className: `min-w-0 flex-1 px-2 text-xs font-semibold md:h-8 md:text-sm ${brandClasses.accentBg}`,
+            })}
+          >
+            Ürünü İncele
+          </Link>
+          <a
+            href={whatsappHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${product.name} için WhatsApp teklif`}
+            className={buttonVariants({
+              variant: "outline",
+              size: "icon-sm",
+              className: `shrink-0 border-[#2A2E35] ${brandClasses.text} hover:bg-[#1A1D21] md:hidden`,
+            })}
+          >
+            <MessageCircleMore className="size-3.5" />
+          </a>
+          <a
+            href={whatsappHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={buttonVariants({
+              variant: "outline",
+              size: "sm",
+              className: `hidden flex-1 border-[#2A2E35] text-xs ${brandClasses.text} hover:bg-[#1A1D21] md:inline-flex md:text-sm`,
+            })}
+          >
+            WhatsApp Teklif
+          </a>
+        </div>
       </div>
-    </motion.article>
+    </article>
   );
 }

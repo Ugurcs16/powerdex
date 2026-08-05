@@ -34,7 +34,7 @@ const focusCards = [
 
 export function FocusCategories() {
   return (
-    <section className={brandClasses.bg + " py-20"}>
+    <section className={brandClasses.bg + " py-12 sm:py-14 lg:py-20"}>
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <p className={`text-xs font-medium uppercase tracking-[0.14em] ${brandClasses.accent}`}>
           Uzmanlık Alanlarımız
