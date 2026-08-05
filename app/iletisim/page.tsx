@@ -1,60 +1,124 @@
 import type { Metadata } from "next";
+import { Mail, MessageCircleMore, Phone, AtSign } from "lucide-react";
+import { company } from "@/config/company";
+import { getGeneralWhatsAppMessage, getWhatsAppUrl } from "@/lib/site";
+import { ContactForm } from "@/components/ContactForm";
+import { brandClasses } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "Iletisim",
-  description: "Powerdex kurumsal iletisim, teklif ve destek kanallari.",
+  title: "Powerdex İletişim | Telefon, WhatsApp ve E-posta",
+  description:
+    "Powerdex ürünleri, toptan ve perakende satış, sipariş ve destek konularında telefon, WhatsApp veya e-posta ile bize ulaşın.",
 };
 
 export default function ContactPage() {
+  const contactCards = [
+    {
+      title: "Telefon",
+      display: company.phone.display,
+      href: company.phone.href,
+      icon: Phone,
+      external: false,
+    },
+    {
+      title: company.whatsapp[0].label,
+      display: company.whatsapp[0].display,
+      href: getWhatsAppUrl(getGeneralWhatsAppMessage(), company.whatsapp[0].href),
+      icon: MessageCircleMore,
+      external: true,
+    },
+    {
+      title: company.whatsapp[1].label,
+      display: company.whatsapp[1].display,
+      href: getWhatsAppUrl(getGeneralWhatsAppMessage(), company.whatsapp[1].href),
+      icon: MessageCircleMore,
+      external: true,
+    },
+    {
+      title: "E-posta",
+      display: company.email.display,
+      href: company.email.href,
+      icon: Mail,
+      external: false,
+    },
+    {
+      title: "Instagram",
+      display: company.instagram.display,
+      href: company.instagram.href,
+      icon: AtSign,
+      external: true,
+    },
+  ];
+
   return (
     <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      <h1 className="text-4xl font-bold text-white">Iletisim</h1>
-      <p className="mt-3 max-w-2xl text-zinc-400">
-        Kurumsal talep, urun sorulari ve is birligi gorusmeleri icin bize ulasin.
-      </p>
+      <div className={`${brandClasses.cardSurface} p-8 sm:p-10`}>
+        <p className={`text-xs font-semibold uppercase tracking-[0.2em] ${brandClasses.accent}`}>
+          İletişim
+        </p>
+        <h1 className="mt-3 text-4xl font-bold text-white">Bizimle İletişime Geçin</h1>
+        <p className={`mt-4 max-w-3xl ${brandClasses.textMuted}`}>
+          Ürünler, toptan ve perakende satış, siparişler ve satış sonrası destek konularında bize
+          ulaşabilirsiniz.
+        </p>
+      </div>
+
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        {contactCards.map((card) => {
+          const Icon = card.icon;
+          return (
+            <a
+              key={card.title}
+              href={card.href}
+              target={card.external ? "_blank" : undefined}
+              rel={card.external ? "noopener noreferrer" : undefined}
+              className={`${brandClasses.cardSurface} p-5 transition hover:border-[#A6C74A]/40`}
+            >
+              <div className="flex items-center gap-3">
+                <span className={`rounded-lg border ${brandClasses.border} p-2`}>
+                  <Icon className={`size-4 ${brandClasses.accent}`} />
+                </span>
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-white">{card.title}</h2>
+              </div>
+              <p className={`mt-4 text-base ${brandClasses.textMuted}`}>{card.display}</p>
+            </a>
+          );
+        })}
+      </div>
 
       <div className="mt-10 grid gap-8 lg:grid-cols-2">
-        <form className="space-y-4 rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
-          <h2 className="text-xl font-semibold text-zinc-100">Kurumsal Form</h2>
-          <input className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-3" placeholder="Ad Soyad" />
-          <input className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-3" placeholder="Sirket" />
-          <input className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-3" placeholder="E-posta" />
-          <textarea
-            className="h-32 w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-3"
-            placeholder="Mesajiniz"
-          />
-          <button type="submit" className="rounded-lg bg-lime-400 px-5 py-3 font-semibold text-zinc-950">
-            Gonder
-          </button>
-        </form>
+        <ContactForm />
 
-        <div className="space-y-4">
-          <article className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
-            <h3 className="text-lg font-semibold text-zinc-100">WhatsApp CTA</h3>
-            <p className="mt-2 text-zinc-400">Hizli destek icin WhatsApp hatti uzerinden aninda iletisime gecin.</p>
-          </article>
-          <article className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
-            <h3 className="text-lg font-semibold text-zinc-100">E-posta</h3>
-            <p className="mt-2 text-zinc-300">info@powerdex.com.tr</p>
-          </article>
-          <article className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
-            <h3 className="text-lg font-semibold text-zinc-100">Adres Placeholder</h3>
-            <p className="mt-2 text-zinc-300">Istanbul / Turkiye</p>
-          </article>
-          <article className="rounded-2xl border border-dashed border-zinc-700 bg-zinc-900 p-6">
-            <h3 className="text-lg font-semibold text-zinc-100">Harita Placeholder</h3>
-          </article>
+        <div className={`space-y-4 ${brandClasses.cardSurface} p-6`}>
+          <h2 className="text-xl font-semibold text-white">Hızlı Destek</h2>
+          <p className={`text-sm leading-relaxed ${brandClasses.textMuted}`}>
+            Acil ürün soruları ve sipariş desteği için WhatsApp hatlarımızdan bize yazabilirsiniz.
+            Mesai saatlerinde mümkün olan en kısa sürede dönüş sağlanır.
+          </p>
+          <div className="flex flex-col gap-3">
+            {company.whatsapp.map((item) => (
+              <a
+                key={item.href}
+                href={getWhatsAppUrl(getGeneralWhatsAppMessage(), item.href)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`rounded-lg px-4 py-3 text-sm font-semibold ${
+                  item.primary ? brandClasses.accentBg : `border ${brandClasses.border} ${brandClasses.text}`
+                }`}
+              >
+                {item.label}: {item.display}
+              </a>
+            ))}
+          </div>
         </div>
       </div>
 
-      <section className="mt-10 rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
-        <h2 className="text-xl font-semibold text-zinc-100">Sik Sorulan Sorular</h2>
-        <div className="mt-4 space-y-3 text-zinc-300">
-          <p>- Siparis takibi nasil yapilir?</p>
-          <p>- Garanti kapsaminda nasil destek alabilirim?</p>
-          <p>- Toplu alim teklif sureci nasil ilerler?</p>
-        </div>
-      </section>
+      {company.address ? (
+        <section className={`mt-10 ${brandClasses.cardSurface} p-6`}>
+          <h2 className="text-xl font-semibold text-white">Adres</h2>
+          <p className={`mt-3 text-sm ${brandClasses.textMuted}`}>{company.address.display}</p>
+        </section>
+      ) : null}
     </section>
   );
 }

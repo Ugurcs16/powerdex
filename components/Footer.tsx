@@ -1,17 +1,53 @@
 import Link from "next/link";
 import { footerMainLinks, footerOtherProducts } from "@/data/categories";
+import { company } from "@/config/company";
+import { getGeneralWhatsAppMessage, getWhatsAppUrl } from "@/lib/site";
 import { brandClasses } from "@/lib/brand";
 
 export function Footer() {
+  const primaryWhatsApp = company.whatsapp.find((item) => item.primary) ?? company.whatsapp[0];
+
   return (
     <footer className={`border-t ${brandClasses.border} ${brandClasses.bg}`}>
       <div className="mx-auto grid w-full max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-5 lg:px-8">
         <div className="lg:col-span-2">
-          <p className={`text-lg font-semibold tracking-[0.18em] ${brandClasses.text}`}>POWERDEX</p>
+          <p className={`text-lg font-semibold tracking-[0.18em] ${brandClasses.text}`}>{company.name}</p>
           <p className={`mt-4 max-w-md text-sm leading-relaxed ${brandClasses.textMuted}`}>
             Profesyonel aydınlatma sistemleri: metal el fenerleri, kafa lambaları ve saha odaklı
             aydınlatma çözümleri.
           </p>
+          <ul className={`mt-5 space-y-2 text-sm ${brandClasses.textMuted}`}>
+            <li>
+              <a href={company.phone.href} className="hover:text-[#F5F5F5]">
+                Telefon: {company.phone.display}
+              </a>
+            </li>
+            <li>
+              <a href={company.email.href} className="hover:text-[#F5F5F5]">
+                E-posta: {company.email.display}
+              </a>
+            </li>
+            <li>
+              <a
+                href={getWhatsAppUrl(getGeneralWhatsAppMessage(), primaryWhatsApp.href)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#F5F5F5]"
+              >
+                WhatsApp: {primaryWhatsApp.display}
+              </a>
+            </li>
+            <li>
+              <a
+                href={company.instagram.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#F5F5F5]"
+              >
+                Instagram: {company.instagram.display}
+              </a>
+            </li>
+          </ul>
         </div>
 
         <div>
@@ -19,7 +55,10 @@ export function Footer() {
           <ul className={`mt-4 space-y-2 text-sm ${brandClasses.textMuted}`}>
             {footerMainLinks.map((link) => (
               <li key={link.slug}>
-                <Link href={`/kategori/${link.slug}`} className="hover:text-[#F5F5F5]">
+                <Link
+                  href={"href" in link && link.href ? link.href : `/kategori/${link.slug}`}
+                  className="hover:text-[#F5F5F5]"
+                >
                   {link.name}
                 </Link>
               </li>
@@ -54,13 +93,18 @@ export function Footer() {
               </Link>
             </li>
             <li>
-              <Link href="/blog" className="hover:text-[#F5F5F5]">
-                Blog / Rehber
+              <Link href="/garanti-iade-kargo" className="hover:text-[#F5F5F5]">
+                İade Politikası
               </Link>
             </li>
             <li>
-              <Link href="/garanti-iade-kargo" className="hover:text-[#F5F5F5]">
-                Garanti & Kargo
+              <Link href="#" className="hover:text-[#F5F5F5]">
+                KVKK
+              </Link>
+            </li>
+            <li>
+              <Link href="#" className="hover:text-[#F5F5F5]">
+                Mesafeli Satış
               </Link>
             </li>
           </ul>
