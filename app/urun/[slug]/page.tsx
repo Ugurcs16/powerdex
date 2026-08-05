@@ -1,9 +1,13 @@
-import Image from "next/image";
 import Link from "next/link";
 import Script from "next/script";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { products } from "@/data/products";
+import { catalogProducts, getProductBySlug, getSimilarProducts } from "@/data/products";
+import { getCategoryLabel } from "@/data/categories";
+import { resolveProductGallery, resolveProductImageSrc } from "@/lib/product-image.server";
+import { getProductWhatsAppMessage, getWhatsAppUrl, siteConfig } from "@/lib/site";
+import { ProductGallery } from "@/components/ProductGallery";
+import { ProductCard } from "@/components/ProductCard";
 import { brandClasses } from "@/lib/brand";
 
 type ProductPageProps = {
@@ -11,31 +15,40 @@ type ProductPageProps = {
 };
 
 export async function generateStaticParams() {
-  return products.map((product) => ({ slug: product.slug }));
+  return catalogProducts.map((product) => ({ slug: product.slug }));
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = products.find((item) => item.slug === slug);
+  const product = getProductBySlug(slug);
 
   if (!product) {
     return { title: "Ürün Bulunamadı" };
   }
 
+  const titleCore = product.name.replace(/^Powerdex\s+/i, "");
+  const title = product.sku
+    ? `Powerdex ${product.sku} ${titleCore.replace(new RegExp(`^${product.sku}\\s*`, "i"), "")}`.trim()
+    : product.name;
+
   return {
-    title: product.name,
+    title,
     description: product.shortDescription,
+    alternates: {
+      canonical: `${siteConfig.url}/urun/${product.slug}`,
+    },
   };
 }
 
 export default async function ProductDetailPage({ params }: ProductPageProps) {
   const { slug } = await params;
-  const product = products.find((item) => item.slug === slug);
+  const product = getProductBySlug(slug);
   if (!product) notFound();
 
-  const similarProducts = products
-    .filter((item) => item.categorySlug === product.categorySlug && item.id !== product.id)
-    .slice(0, 3);
+  const similarProducts = getSimilarProducts(product, 3);
+  const categoryLabel = getCategoryLabel(product.category);
+  const gallery = resolveProductGallery(product);
+  const whatsappHref = getWhatsAppUrl(getProductWhatsAppMessage(product));
 
   const productSchema = {
     "@context": "https://schema.org",
@@ -43,8 +56,10 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
     name: product.name,
     description: product.shortDescription,
     brand: { "@type": "Brand", name: "Powerdex" },
-    image: `https://www.powerdex.com.tr${product.image}`,
-    category: product.category,
+    image: gallery.map((item) => `${siteConfig.url}${item}`),
+    category: categoryLabel,
+    sku: product.sku || undefined,
+    url: `${siteConfig.url}/urun/${product.slug}`,
   };
 
   return (
@@ -52,58 +67,51 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
       <Script id="product-schema" type="application/ld+json">
         {JSON.stringify(productSchema)}
       </Script>
+
+      <nav className={`mb-6 text-xs ${brandClasses.textMuted}`}>
+        <Link href="/" className="hover:text-[#F5F5F5]">
+          Ana Sayfa
+        </Link>
+        <span className="mx-2">/</span>
+        <Link href={`/kategori/${product.category}`} className="hover:text-[#F5F5F5]">
+          {categoryLabel}
+        </Link>
+        <span className="mx-2">/</span>
+        <span className={brandClasses.text}>{product.name}</span>
+      </nav>
+
       <div className="grid gap-8 lg:grid-cols-2">
-        <div className="space-y-4">
-          <div
-            className={`relative aspect-[4/3] overflow-hidden rounded-[20px] border ${brandClasses.border} bg-[#151922] shadow-[0_12px_40px_rgba(0,0,0,0.35)]`}
-          >
-            <Image src={product.image} alt={product.name} fill className="object-contain p-6" sizes="(max-width: 1024px) 100vw, 50vw" />
-          </div>
-          <div className="grid grid-cols-3 gap-3">
-            {[1, 2, 3].map((item) => (
-              <div
-                key={item}
-                className={`relative aspect-[4/3] overflow-hidden rounded-[20px] border ${brandClasses.border} bg-[#151922]`}
-              >
-                <Image src={product.image} alt={`${product.name} galeri ${item}`} fill className="object-contain p-2" sizes="120px" />
-              </div>
-            ))}
-          </div>
-        </div>
+        <ProductGallery images={gallery} alt={product.name} category={product.category} />
 
         <div className="space-y-6">
-          <p className={`text-xs uppercase tracking-[0.15em] ${brandClasses.accent}`}>{product.category}</p>
+          <p className={`text-xs uppercase tracking-[0.15em] ${brandClasses.accent}`}>{categoryLabel}</p>
           <h1 className="text-3xl font-bold text-white sm:text-4xl">{product.name}</h1>
-          <div className="flex flex-wrap gap-2">
-            {product.usageTags.map((tag) => (
-              <span
-                key={tag}
-                className={`rounded-md border ${brandClasses.border} ${brandClasses.surface} px-2 py-1 text-xs ${brandClasses.textMuted}`}
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
+          {product.sku ? <p className={`text-sm ${brandClasses.textMuted}`}>SKU: {product.sku}</p> : null}
+
           <p className={`leading-relaxed ${brandClasses.textMuted}`}>{product.shortDescription}</p>
 
-          <div className={`grid gap-4 ${brandClasses.cardSurface} p-5 sm:grid-cols-2`}>
-            {Object.entries(product.technicalSpecs).map(([key, value]) => (
-              <div key={key}>
-                <p className="text-xs uppercase text-zinc-500">{key}</p>
-                <p className="text-sm text-zinc-200">{value}</p>
-              </div>
-            ))}
-          </div>
+          {product.highlights.length > 0 ? (
+            <ul className={`list-none space-y-2 border-t ${brandClasses.border} pt-4 text-sm ${brandClasses.textMuted}`}>
+              {product.highlights.map((item) => (
+                <li key={item}>{item.replace(/^[-—–\s]+/, "")}</li>
+              ))}
+            </ul>
+          ) : null}
 
           <div className="flex flex-wrap gap-3">
-            <button className={`rounded-lg px-5 py-3 font-semibold ${brandClasses.accentBg}`}>
-              {product.priceLabel}
-            </button>
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`rounded-lg px-5 py-3 font-semibold ${brandClasses.accentBg}`}
+            >
+              WhatsApp ile Bilgi / Teklif Al
+            </a>
             <Link
               href="/iletisim"
               className="rounded-lg border border-zinc-700 px-5 py-3 text-sm font-semibold text-zinc-100"
             >
-              Teklif Al
+              İletişim Formu
             </Link>
           </div>
         </div>
@@ -111,52 +119,78 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
       <div className="mt-12 grid gap-6 lg:grid-cols-2">
         <article className={`${brandClasses.cardSurface} p-6`}>
-          <h2 className="text-xl font-semibold text-zinc-100">Kullanim Alanlari</h2>
+          <h2 className="text-xl font-semibold text-zinc-100">Teknik Özellikler</h2>
+          {Object.keys(product.specifications).length > 0 ? (
+            <dl className="mt-4 space-y-3 text-sm">
+              {Object.entries(product.specifications).map(([key, value]) => (
+                <div key={key} className={`flex items-start justify-between gap-4 border-b ${brandClasses.border} pb-2`}>
+                  <dt className={brandClasses.textMuted}>{key}</dt>
+                  <dd className="text-right text-zinc-200">{value}</dd>
+                </div>
+              ))}
+            </dl>
+          ) : (
+            <p className={`mt-3 text-sm ${brandClasses.textMuted}`}>
+              Bu ürün için teknik özellikler resmi katalog ile doğrulanacaktır.
+            </p>
+          )}
+        </article>
+
+        <article className={`${brandClasses.cardSurface} p-6`}>
+          <h2 className="text-xl font-semibold text-zinc-100">Kullanım Alanları</h2>
           <ul className="mt-3 space-y-2 text-sm text-zinc-300">
-            {product.usageAreas.map((item) => (
-              <li key={item}>- {item}</li>
+            {product.useCases.map((item) => (
+              <li key={item}>{item}</li>
             ))}
           </ul>
         </article>
+
         <article className={`${brandClasses.cardSurface} p-6`}>
-          <h2 className="text-xl font-semibold text-zinc-100">Kutu Icerigi</h2>
-          <ul className="mt-3 space-y-2 text-sm text-zinc-300">
-            {product.boxContents.map((item) => (
-              <li key={item}>- {item}</li>
-            ))}
-          </ul>
+          <h2 className="text-xl font-semibold text-zinc-100">Kutu İçeriği</h2>
+          {product.boxContents.length > 0 ? (
+            <ul className="mt-3 space-y-2 text-sm text-zinc-300">
+              {product.boxContents.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className={`mt-3 text-sm ${brandClasses.textMuted}`}>Kutu içeriği resmi katalogda doğrulanacaktır.</p>
+          )}
         </article>
+
         <article className={`${brandClasses.cardSurface} p-6`}>
-          <h2 className="text-xl font-semibold text-zinc-100">Guvenlik / Kullanim Uyarisi</h2>
-          <ul className="mt-3 space-y-2 text-sm text-zinc-300">
-            {product.warnings.map((item) => (
-              <li key={item}>- {item}</li>
-            ))}
-          </ul>
-        </article>
-        <article className={`${brandClasses.cardSurface} p-6`}>
-          <h2 className="text-xl font-semibold text-zinc-100">SSS</h2>
-          <div className="mt-3 space-y-3 text-sm text-zinc-300">
-            {product.faq.map((item) => (
-              <div key={item.question}>
-                <p className="font-semibold text-zinc-100">{item.question}</p>
-                <p>{item.answer}</p>
-              </div>
-            ))}
-          </div>
+          <h2 className="text-xl font-semibold text-zinc-100">Uyarılar</h2>
+          {product.warnings.length > 0 ? (
+            <ul className="mt-3 space-y-2 text-sm text-zinc-300">
+              {product.warnings.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className={`mt-3 text-sm ${brandClasses.textMuted}`}>
+              Ürünü kullanmadan önce kılavuzdaki güvenlik uyarılarını okuyun.
+            </p>
+          )}
         </article>
       </div>
 
+      {product.description && product.description !== product.shortDescription ? (
+        <article className={`mt-8 ${brandClasses.cardSurface} p-6`}>
+          <h2 className="text-xl font-semibold text-zinc-100">Açıklama</h2>
+          <p className={`mt-3 text-sm leading-relaxed ${brandClasses.textMuted}`}>{product.description}</p>
+        </article>
+      ) : null}
+
       <section className="mt-14">
-        <h2 className="text-2xl font-bold text-zinc-100">Benzer Urunler</h2>
+        <h2 className="text-2xl font-bold text-zinc-100">Benzer Ürünler</h2>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {similarProducts.map((item) => (
-            <Link key={item.id} href={`/urun/${item.slug}`} className={`${brandClasses.cardSurface} p-4`}>
-              <p className={`text-sm ${brandClasses.accent}`}>{item.category}</p>
-              <p className={`mt-2 font-semibold ${brandClasses.text}`}>{item.name}</p>
-            </Link>
+            <ProductCard key={item.id} product={item} imageSrc={resolveProductImageSrc(item)} />
           ))}
         </div>
+        {similarProducts.length === 0 ? (
+          <p className={`mt-4 text-sm ${brandClasses.textMuted}`}>Bu kategoride başka ürün bulunamadı.</p>
+        ) : null}
       </section>
     </section>
   );

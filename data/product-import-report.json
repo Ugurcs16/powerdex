@@ -1,0 +1,32 @@
+{
+  "totalProducts": 229,
+  "totalImages": 212,
+  "designAssetsExcluded": [
+    "kafalambasi.jpg",
+    "metalelfeneri.jpg",
+    "powerdex-flashlight-range.jpg"
+  ],
+  "imagesUsed": 212,
+  "imageCoveragePercent": 100.0,
+  "matchedLegacyWithImages": 84,
+  "createdFromImagesOnly": 111,
+  "legacyWithoutImages": 34,
+  "featuredCount": 11,
+  "productsWithRealImages": 195,
+  "categoryCounts": {
+    "metal-el-fenerleri": 96,
+    "tiras-makineleri": 45,
+    "kafa-lambalari": 29,
+    "piller-sarj": 23,
+    "kamp-lambalari": 16,
+    "berber-makaslari": 7,
+    "hesap-makineleri": 4,
+    "masa-lambalari": 3,
+    "sac-duzlestiriciler": 3,
+    "solar-aydinlatma": 1,
+    "fon-makineleri": 1,
+    "jet-fan": 1
+  },
+  "generatedAt": "2026-08-05T18:06:48.696754+00:00",
+  "sourcePriority": "local-images"
+}
