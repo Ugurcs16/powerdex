@@ -3,7 +3,7 @@ import { MessageCircleMore } from "lucide-react";
 import type { Product } from "@/types/product";
 import { getCategoryLabel } from "@/data/categories";
 import { getCategoryPlaceholder } from "@/lib/product-image";
-import { getProductWhatsAppMessage, getWhatsAppUrl } from "@/lib/site";
+import { getProductCardWhatsAppMessage, getWhatsAppUrl } from "@/lib/site";
 import { buttonVariants } from "@/components/ui/button";
 import { ProductImage } from "@/components/ProductImage";
 import { brandClasses } from "@/lib/brand";
@@ -22,7 +22,7 @@ export function ProductCard({ product, imageSrc, priority = false }: ProductCard
     (product.image?.startsWith("/images/products/")
       ? product.image
       : getCategoryPlaceholder(product.category));
-  const whatsappHref = getWhatsAppUrl(getProductWhatsAppMessage(product));
+  const whatsappHref = getWhatsAppUrl(getProductCardWhatsAppMessage(product));
   const mobileHighlights = product.highlights.slice(0, 2);
   const desktopHighlights = product.highlights.slice(0, 3);
 

@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { footerMainLinks, footerOtherProducts } from "@/data/categories";
 import { company } from "@/config/company";
-import { getGeneralWhatsAppMessage, getWhatsAppUrl } from "@/lib/site";
+import { getGeneralWhatsAppMessage, getPrimaryWhatsApp, getWhatsAppUrl } from "@/lib/site";
 import { brandClasses } from "@/lib/brand";
 
 export function Footer() {
-  const primaryWhatsApp = company.whatsapp.find((item) => item.primary) ?? company.whatsapp[0];
+  const primaryWhatsApp = getPrimaryWhatsApp();
 
   return (
     <footer className={`border-t ${brandClasses.border} ${brandClasses.bg}`}>
@@ -29,7 +29,7 @@ export function Footer() {
             </li>
             <li>
               <a
-                href={getWhatsAppUrl(getGeneralWhatsAppMessage(), primaryWhatsApp.href)}
+                href={getWhatsAppUrl(getGeneralWhatsAppMessage())}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-[#F5F5F5]"

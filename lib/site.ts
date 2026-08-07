@@ -6,9 +6,10 @@ export const siteConfig = {
 } as const;
 
 export function getPrimaryWhatsApp() {
-  return company.whatsapp.find((item) => item.primary) ?? company.whatsapp[0];
+  return company.whatsapp.primary;
 }
 
+/** Builds wa.me URL with optional encoded text query. */
 export function getWhatsAppUrl(message?: string, href?: string): string {
   const base = href ?? getPrimaryWhatsApp().href;
   if (!message) return base;
@@ -20,9 +21,22 @@ export function getGeneralWhatsAppMessage(): string {
   return "Merhaba, Powerdex ürünleri hakkında bilgi almak istiyorum.";
 }
 
+export function getWholesaleWhatsAppMessage(): string {
+  return "Merhaba, Powerdex ürünleri için toptan satış hakkında bilgi almak istiyorum.";
+}
+
+/** Product detail page WhatsApp message: SKU + product name */
 export function getProductWhatsAppMessage(product: { name: string; sku?: string }): string {
-  if (product.sku) {
-    return `Merhaba, ${product.sku} ${product.name} hakkında bilgi almak istiyorum.`;
+  if (product.sku?.trim()) {
+    return `Merhaba, ${product.sku.trim()} ${product.name} hakkında bilgi almak istiyorum.`;
+  }
+  return `Merhaba, ${product.name} hakkında bilgi almak istiyorum.`;
+}
+
+/** Product card WhatsApp message: SKU-focused */
+export function getProductCardWhatsAppMessage(product: { name: string; sku?: string }): string {
+  if (product.sku?.trim()) {
+    return `Merhaba, ${product.sku.trim()} ürünü hakkında bilgi almak istiyorum.`;
   }
   return `Merhaba, ${product.name} hakkında bilgi almak istiyorum.`;
 }

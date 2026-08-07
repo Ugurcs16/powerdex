@@ -14,20 +14,14 @@ export const company = {
     href: "mailto:powerdex.tr@gmail.com",
   },
 
-  whatsapp: [
-    {
+  whatsapp: {
+    primary: {
       label: "WhatsApp Destek",
-      display: "+90 543 948 73 83",
-      href: "https://wa.me/905439487383",
-      primary: true,
+      display: "+90 535 315 43 73",
+      href: "https://wa.me/905353154373",
+      number: "905353154373",
     },
-    {
-      label: "Alternatif WhatsApp Hattı",
-      display: "+90 537 867 73 62",
-      href: "https://wa.me/905378677362",
-      primary: false,
-    },
-  ],
+  },
 
   instagram: {
     display: "@powerdex.tr",

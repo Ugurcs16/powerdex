@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import { Mail, MessageCircleMore, Phone, AtSign } from "lucide-react";
 import { company } from "@/config/company";
-import { getGeneralWhatsAppMessage, getWhatsAppUrl } from "@/lib/site";
+import {
+  getGeneralWhatsAppMessage,
+  getPrimaryWhatsApp,
+  getWholesaleWhatsAppMessage,
+  getWhatsAppUrl,
+} from "@/lib/site";
 import { ContactForm } from "@/components/ContactForm";
 import { brandClasses } from "@/lib/brand";
 
@@ -12,6 +17,10 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
+  const primaryWhatsApp = getPrimaryWhatsApp();
+  const whatsappHref = getWhatsAppUrl(getGeneralWhatsAppMessage());
+  const wholesaleHref = getWhatsAppUrl(getWholesaleWhatsAppMessage());
+
   const contactCards = [
     {
       title: "Telefon",
@@ -21,16 +30,9 @@ export default function ContactPage() {
       external: false,
     },
     {
-      title: company.whatsapp[0].label,
-      display: company.whatsapp[0].display,
-      href: getWhatsAppUrl(getGeneralWhatsAppMessage(), company.whatsapp[0].href),
-      icon: MessageCircleMore,
-      external: true,
-    },
-    {
-      title: company.whatsapp[1].label,
-      display: company.whatsapp[1].display,
-      href: getWhatsAppUrl(getGeneralWhatsAppMessage(), company.whatsapp[1].href),
+      title: primaryWhatsApp.label,
+      display: primaryWhatsApp.display,
+      href: whatsappHref,
       icon: MessageCircleMore,
       external: true,
     },
@@ -92,23 +94,26 @@ export default function ContactPage() {
         <div className={`space-y-4 ${brandClasses.cardSurface} p-6`}>
           <h2 className="text-xl font-semibold text-white">Hızlı Destek</h2>
           <p className={`text-sm leading-relaxed ${brandClasses.textMuted}`}>
-            Acil ürün soruları ve sipariş desteği için WhatsApp hatlarımızdan bize yazabilirsiniz.
-            Mesai saatlerinde mümkün olan en kısa sürede dönüş sağlanır.
+            Acil ürün soruları ve sipariş desteği için WhatsApp üzerinden bize yazabilirsiniz. Mesai
+            saatlerinde mümkün olan en kısa sürede dönüş sağlanır.
           </p>
           <div className="flex flex-col gap-3">
-            {company.whatsapp.map((item) => (
-              <a
-                key={item.href}
-                href={getWhatsAppUrl(getGeneralWhatsAppMessage(), item.href)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`rounded-lg px-4 py-3 text-sm font-semibold ${
-                  item.primary ? brandClasses.accentBg : `border ${brandClasses.border} ${brandClasses.text}`
-                }`}
-              >
-                {item.label}: {item.display}
-              </a>
-            ))}
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`rounded-lg px-4 py-3 text-sm font-semibold ${brandClasses.accentBg}`}
+            >
+              {primaryWhatsApp.label}: {primaryWhatsApp.display}
+            </a>
+            <a
+              href={wholesaleHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`rounded-lg border ${brandClasses.border} px-4 py-3 text-sm font-semibold ${brandClasses.text} hover:bg-[#1A1D21]`}
+            >
+              Toptan Satış Bilgi Al
+            </a>
           </div>
         </div>
       </div>
