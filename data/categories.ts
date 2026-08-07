@@ -68,10 +68,10 @@ export function getCategoryLabel(category: ProductCategory | string): string {
   return category;
 }
 
-/** Canonical focus/category card images (cache-busted v2 paths). */
+/** Canonical focus/category card images — single source of truth. */
 export const focusCategoryImages = {
-  "metal-el-fenerleri": "/images/categories/metal-el-fenerleri-v2.jpg",
-  "kafa-lambalari": "/images/categories/kafa-lambalari-v2.jpg",
+  "metal-el-fenerleri": "/images/products/metalelfeneri.jpg",
+  "kafa-lambalari": "/images/products/kafalambasi.jpg",
 } as const;
 
 /** Alias used by getCategoryImage / expertise cards. */
