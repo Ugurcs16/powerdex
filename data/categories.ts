@@ -68,10 +68,15 @@ export function getCategoryLabel(category: ProductCategory | string): string {
   return category;
 }
 
-/** Canonical category hero/card images — use this instead of hardcoding paths. */
+/** Canonical focus/category card images (cache-busted v2 paths). */
+export const focusCategoryImages = {
+  "metal-el-fenerleri": "/images/categories/metal-el-fenerleri-v2.jpg",
+  "kafa-lambalari": "/images/categories/kafa-lambalari-v2.jpg",
+} as const;
+
+/** Alias used by getCategoryImage / expertise cards. */
 export const categoryImages: Partial<Record<ProductCategory, string>> = {
-  "metal-el-fenerleri": "/images/products/metalelfeneri.jpg",
-  "kafa-lambalari": "/images/products/kafalambasi.jpg",
+  ...focusCategoryImages,
 };
 
 export function getCategoryImage(slug: ProductCategory | string): string | undefined {
@@ -94,7 +99,7 @@ export const expertiseCategories: ExpertiseCategory[] = [
   {
     name: "Metal El Fenerleri",
     slug: "metal-el-fenerleri",
-    image: categoryImages["metal-el-fenerleri"]!,
+    image: focusCategoryImages["metal-el-fenerleri"],
     shortDescription: "Güçlü ve dayanıklı modeller.",
     description:
       "Zorlu koşullar, teknik işler, araç kullanımı ve güvenlik ihtiyaçları için güçlü gövde yapısına sahip el fenerleri.",
@@ -105,7 +110,7 @@ export const expertiseCategories: ExpertiseCategory[] = [
   {
     name: "Kafa Lambaları",
     slug: "kafa-lambalari",
-    image: categoryImages["kafa-lambalari"]!,
+    image: focusCategoryImages["kafa-lambalari"],
     shortDescription: "Eller serbest aydınlatma.",
     description:
       "Eller serbest kullanım gerektiren kamp, tamir, servis, güvenlik ve outdoor senaryoları için pratik çözümler.",
