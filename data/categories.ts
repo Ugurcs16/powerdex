@@ -68,19 +68,27 @@ export function getCategoryLabel(category: ProductCategory | string): string {
   return category;
 }
 
-/** Canonical focus/category card images — single source of truth. */
-export const focusCategoryImages = {
-  "metal-el-fenerleri": "/images/products/metalelfeneri.jpg",
-  "kafa-lambalari": "/images/products/kafalambasi.jpg",
+/** Single source of truth for category marketing visuals. */
+export const categoryVisuals = {
+  "metal-el-fenerleri": {
+    image: "/images/categories/metal-el-fenerleri-v3.jpg",
+  },
+  "kafa-lambalari": {
+    image: "/images/categories/kafa-lambalari-v3.jpg",
+  },
 } as const;
 
-/** Alias used by getCategoryImage / expertise cards. */
-export const categoryImages: Partial<Record<ProductCategory, string>> = {
-  ...focusCategoryImages,
-};
+export type CategoryVisualSlug = keyof typeof categoryVisuals;
+
+export function getCategoryVisual(slug: ProductCategory | string): string | undefined {
+  if (slug in categoryVisuals) {
+    return categoryVisuals[slug as CategoryVisualSlug].image;
+  }
+  return undefined;
+}
 
 export function getCategoryImage(slug: ProductCategory | string): string | undefined {
-  return categoryImages[slug as ProductCategory];
+  return getCategoryVisual(slug);
 }
 
 export type ExpertiseCategory = {
@@ -99,7 +107,7 @@ export const expertiseCategories: ExpertiseCategory[] = [
   {
     name: "Metal El Fenerleri",
     slug: "metal-el-fenerleri",
-    image: focusCategoryImages["metal-el-fenerleri"],
+    image: categoryVisuals["metal-el-fenerleri"].image,
     shortDescription: "Güçlü ve dayanıklı modeller.",
     description:
       "Zorlu koşullar, teknik işler, araç kullanımı ve güvenlik ihtiyaçları için güçlü gövde yapısına sahip el fenerleri.",
@@ -110,7 +118,7 @@ export const expertiseCategories: ExpertiseCategory[] = [
   {
     name: "Kafa Lambaları",
     slug: "kafa-lambalari",
-    image: focusCategoryImages["kafa-lambalari"],
+    image: categoryVisuals["kafa-lambalari"].image,
     shortDescription: "Eller serbest aydınlatma.",
     description:
       "Eller serbest kullanım gerektiren kamp, tamir, servis, güvenlik ve outdoor senaryoları için pratik çözümler.",
@@ -131,7 +139,7 @@ export const allCategories: CategoryItem[] = (
   name: categoryLabels[slug],
   slug,
   description: categoryDescriptions[slug],
-  image: getCategoryImage(slug),
+  image: getCategoryVisual(slug),
 }));
 
 export const primaryNavigation: NavCategory[] = [
