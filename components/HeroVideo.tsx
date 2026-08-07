@@ -4,13 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { buttonVariants } from "@/components/ui/button";
+import { expertiseCategories } from "@/data/categories";
 import { brandClasses } from "@/lib/brand";
 
-const METAL_FLASHLIGHT = "/images/products/metalelfeneri.jpg";
-const HEADLAMP = "/images/products/kafalambasi.jpg";
 const HERO_POSTER = "/images/hero/powerdex-hero-poster.jpg";
 const HERO_POSTER_FALLBACK = "/images/hero/powerdex-hero-poster.svg";
 const HERO_VIDEO = "/videos/powerdex-hero.mp4";
+
+const metalFlashlight = expertiseCategories.find((item) => item.slug === "metal-el-fenerleri")!;
 
 type NetworkConnection = {
   saveData?: boolean;
@@ -137,28 +138,19 @@ function HeroBackground() {
 function CategoryHintCards() {
   return (
     <div className="grid grid-cols-2 gap-3">
-      <article className={`rounded-2xl border ${brandClasses.border} ${brandClasses.card} p-3`}>
-        <div className="flex gap-2.5">
-          <div className="relative size-12 shrink-0 overflow-hidden rounded-xl bg-[#151922]">
-            <Image src={METAL_FLASHLIGHT} alt="" fill loading="lazy" className="object-contain p-1" sizes="48px" />
+      {expertiseCategories.map((card) => (
+        <article key={card.slug} className={`rounded-2xl border ${brandClasses.border} ${brandClasses.card} p-3`}>
+          <div className="flex gap-2.5">
+            <div className="relative size-12 shrink-0 overflow-hidden rounded-xl bg-[#151922]">
+              <Image src={card.image} alt="" fill loading="lazy" className="object-contain p-1" sizes="48px" />
+            </div>
+            <div>
+              <h3 className={`text-xs font-semibold sm:text-sm ${brandClasses.text}`}>{card.name}</h3>
+              <p className={`mt-1 text-[11px] leading-snug ${brandClasses.textMuted}`}>{card.hint}</p>
+            </div>
           </div>
-          <div>
-            <h3 className={`text-xs font-semibold sm:text-sm ${brandClasses.text}`}>Metal El Feneri</h3>
-            <p className={`mt-1 text-[11px] leading-snug ${brandClasses.textMuted}`}>Güçlü ışık · Şarjlı</p>
-          </div>
-        </div>
-      </article>
-      <article className={`rounded-2xl border ${brandClasses.border} ${brandClasses.card} p-3`}>
-        <div className="flex gap-2.5">
-          <div className="relative size-12 shrink-0 overflow-hidden rounded-xl bg-[#151922]">
-            <Image src={HEADLAMP} alt="" fill loading="lazy" className="object-contain p-1" sizes="48px" />
-          </div>
-          <div>
-            <h3 className={`text-xs font-semibold sm:text-sm ${brandClasses.text}`}>Kafa Lambası</h3>
-            <p className={`mt-1 text-[11px] leading-snug ${brandClasses.textMuted}`}>Eller serbest</p>
-          </div>
-        </div>
-      </article>
+        </article>
+      ))}
     </div>
   );
 }
@@ -221,8 +213,8 @@ export function HeroVideo() {
           >
             <div className="relative aspect-[4/3] w-full">
               <Image
-                src={METAL_FLASHLIGHT}
-                alt="Powerdex Metal El Feneri"
+                src={metalFlashlight.image}
+                alt={metalFlashlight.name}
                 fill
                 loading="lazy"
                 className="object-contain p-6"
@@ -232,43 +224,33 @@ export function HeroVideo() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <article className={`rounded-[20px] border ${brandClasses.border} ${brandClasses.card} p-4`}>
-              <div className="flex gap-3">
-                <div className="relative size-14 shrink-0 overflow-hidden rounded-xl bg-[#151922]">
-                  <Image
-                    src={METAL_FLASHLIGHT}
-                    alt=""
-                    fill
-                    loading="lazy"
-                    className="object-contain p-1"
-                    sizes="56px"
-                  />
+            {expertiseCategories.map((card) => (
+              <article
+                key={card.slug}
+                className={`rounded-[20px] border ${brandClasses.border} ${brandClasses.card} p-4`}
+              >
+                <div className="flex gap-3">
+                  <div className="relative size-14 shrink-0 overflow-hidden rounded-xl bg-[#151922]">
+                    <Image
+                      src={card.image}
+                      alt=""
+                      fill
+                      loading="lazy"
+                      className="object-contain p-1"
+                      sizes="56px"
+                    />
+                  </div>
+                  <div>
+                    <h3 className={`text-sm font-semibold ${brandClasses.text}`}>{card.name}</h3>
+                    <ul className={`mt-2 space-y-1 text-xs ${brandClasses.textMuted}`}>
+                      {card.features.slice(0, 3).map((feature) => (
+                        <li key={feature}>{feature}</li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-                <div>
-                  <h3 className={`text-sm font-semibold ${brandClasses.text}`}>Metal El Feneri</h3>
-                  <ul className={`mt-2 space-y-1 text-xs ${brandClasses.textMuted}`}>
-                    <li>Alüminyum Gövde</li>
-                    <li>Güçlü Işık</li>
-                    <li>Şarjlı Kullanım</li>
-                  </ul>
-                </div>
-              </div>
-            </article>
-            <article className={`rounded-[20px] border ${brandClasses.border} ${brandClasses.card} p-4`}>
-              <div className="flex gap-3">
-                <div className="relative size-14 shrink-0 overflow-hidden rounded-xl bg-[#151922]">
-                  <Image src={HEADLAMP} alt="" fill loading="lazy" className="object-contain p-1" sizes="56px" />
-                </div>
-                <div>
-                  <h3 className={`text-sm font-semibold ${brandClasses.text}`}>Kafa Lambası</h3>
-                  <ul className={`mt-2 space-y-1 text-xs ${brandClasses.textMuted}`}>
-                    <li>Eller Serbest Kullanım</li>
-                    <li>Uzun Süreli Performans</li>
-                    <li>Outdoor ve Teknik İşler</li>
-                  </ul>
-                </div>
-              </div>
-            </article>
+              </article>
+            ))}
           </div>
         </div>
       </div>

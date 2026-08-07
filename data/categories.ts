@@ -68,12 +68,65 @@ export function getCategoryLabel(category: ProductCategory | string): string {
   return category;
 }
 
+/** Canonical category hero/card images — use this instead of hardcoding paths. */
+export const categoryImages: Partial<Record<ProductCategory, string>> = {
+  "metal-el-fenerleri": "/images/products/metalelfeneri.jpg",
+  "kafa-lambalari": "/images/products/kafalambasi.jpg",
+};
+
+export function getCategoryImage(slug: ProductCategory | string): string | undefined {
+  return categoryImages[slug as ProductCategory];
+}
+
+export type ExpertiseCategory = {
+  name: string;
+  slug: ProductCategory;
+  image: string;
+  shortDescription: string;
+  description: string;
+  features: string[];
+  cta: string;
+  hint: string;
+};
+
+/** Shared Metal / Kafa category cards (homepage expertise + hero hints). */
+export const expertiseCategories: ExpertiseCategory[] = [
+  {
+    name: "Metal El Fenerleri",
+    slug: "metal-el-fenerleri",
+    image: categoryImages["metal-el-fenerleri"]!,
+    shortDescription: "Güçlü ve dayanıklı modeller.",
+    description:
+      "Zorlu koşullar, teknik işler, araç kullanımı ve güvenlik ihtiyaçları için güçlü gövde yapısına sahip el fenerleri.",
+    features: ["Metal gövde", "Güçlü ışık", "Şarjlı kullanım", "Kompakt tasarım"],
+    cta: "Metal Fenerleri İncele",
+    hint: "Güçlü ışık · Şarjlı",
+  },
+  {
+    name: "Kafa Lambaları",
+    slug: "kafa-lambalari",
+    image: categoryImages["kafa-lambalari"]!,
+    shortDescription: "Eller serbest aydınlatma.",
+    description:
+      "Eller serbest kullanım gerektiren kamp, tamir, servis, güvenlik ve outdoor senaryoları için pratik çözümler.",
+    features: [
+      "Eller serbest kullanım",
+      "Uzun çalışma süresi",
+      "Hafif yapı",
+      "Çoklu ışık modu",
+    ],
+    cta: "Kafa Lambalarını Gör",
+    hint: "Eller serbest",
+  },
+];
+
 export const allCategories: CategoryItem[] = (
   Object.keys(categoryLabels) as ProductCategory[]
 ).map((slug) => ({
   name: categoryLabels[slug],
   slug,
   description: categoryDescriptions[slug],
+  image: getCategoryImage(slug),
 }));
 
 export const primaryNavigation: NavCategory[] = [
@@ -120,17 +173,9 @@ export const footerOtherProducts = [
   { name: "Solar Aydınlatma", slug: "solar-aydinlatma" },
 ];
 
-export const featuredCategories: CategoryItem[] = [
-  {
-    name: "Metal El Fenerleri",
-    slug: "metal-el-fenerleri",
-    description: "Dayanıklı gövde ve güçlü ışık performansı.",
-    image: "/images/products/metalelfeneri.jpg",
-  },
-  {
-    name: "Kafa Lambaları",
-    slug: "kafa-lambalari",
-    description: "Eller serbest profesyonel kullanım.",
-    image: "/images/products/kafalambasi.jpg",
-  },
-];
+export const featuredCategories: CategoryItem[] = expertiseCategories.map((item) => ({
+  name: item.name,
+  slug: item.slug,
+  description: item.shortDescription,
+  image: item.image,
+}));

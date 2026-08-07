@@ -1,34 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { expertiseCategories } from "@/data/categories";
 import { brandClasses } from "@/lib/brand";
-
-const focusCards = [
-  {
-    title: "Metal El Fenerleri",
-    slug: "metal-el-fenerleri",
-    image: "/images/products/metalelfeneri.jpg",
-    shortDescription: "Güçlü ve dayanıklı modeller.",
-    description:
-      "Zorlu koşullar, teknik işler, araç kullanımı ve güvenlik ihtiyaçları için güçlü gövde yapısına sahip el fenerleri.",
-    features: ["Metal gövde", "Güçlü ışık", "Şarjlı kullanım", "Kompakt tasarım"],
-    cta: "Metal Fenerleri İncele",
-  },
-  {
-    title: "Kafa Lambaları",
-    slug: "kafa-lambalari",
-    image: "/images/products/kafalambasi.jpg",
-    shortDescription: "Eller serbest aydınlatma.",
-    description:
-      "Eller serbest kullanım gerektiren kamp, tamir, servis, güvenlik ve outdoor senaryoları için pratik çözümler.",
-    features: [
-      "Eller serbest kullanım",
-      "Uzun çalışma süresi",
-      "Hafif yapı",
-      "Çoklu ışık modu",
-    ],
-    cta: "Kafa Lambalarını Gör",
-  },
-] as const;
 
 export function FocusCategories() {
   return (
@@ -45,7 +18,7 @@ export function FocusCategories() {
         </p>
 
         <div className="mt-8 grid grid-cols-2 items-stretch gap-3 md:mt-10 md:gap-6">
-          {focusCards.map((card) => (
+          {expertiseCategories.map((card) => (
             <article
               key={card.slug}
               className={`group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border ${brandClasses.border} bg-[#20242A] shadow-[0_12px_40px_rgba(0,0,0,0.35)] transition-shadow hover:shadow-[0_20px_50px_rgba(0,0,0,0.45),0_0_30px_rgba(166,199,74,0.08)]`}
@@ -53,11 +26,11 @@ export function FocusCategories() {
               <Link
                 href={`/kategori/${card.slug}`}
                 className="relative block aspect-square overflow-hidden bg-[#15181C] md:aspect-[16/10]"
-                aria-label={`${card.title} kategorisini incele`}
+                aria-label={`${card.name} kategorisini incele`}
               >
                 <Image
                   src={card.image}
-                  alt={card.title}
+                  alt={card.name}
                   fill
                   className="object-contain p-3 transition-transform duration-500 md:object-cover md:p-0 md:group-hover:scale-105"
                   sizes="(max-width: 768px) 50vw, 50vw"
@@ -66,7 +39,7 @@ export function FocusCategories() {
                 <h3
                   className={`pointer-events-none absolute bottom-4 left-5 hidden text-2xl font-bold lg:text-3xl ${brandClasses.text} md:block`}
                 >
-                  {card.title}
+                  {card.name}
                 </h3>
               </Link>
 
@@ -74,7 +47,7 @@ export function FocusCategories() {
                 <h3
                   className={`line-clamp-2 text-sm font-semibold leading-tight ${brandClasses.text} md:hidden`}
                 >
-                  {card.title}
+                  {card.name}
                 </h3>
 
                 <p className={`mt-1 line-clamp-2 text-xs leading-snug ${brandClasses.textMuted} md:hidden`}>
